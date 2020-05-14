@@ -9,6 +9,48 @@
             <field name="context">{'default_employee_ref': active_id}</field>
         </record>
 
+        <record id="view_form_cv" model="ir.ui.view">
+            <field name="name">hr.employee.cv.form</field>
+            <field name="model">hr.employee.cv</field>
+            <field name="arch" type="xml">
+                <form string="Curriculum Vitae">
+                    <sheet>
+                        <field name="image_1920" widget='image' class="oe_avatar"
+                               options='{"zoom": true, "preview_image":"image_1920"}'/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Employee's Name" required="True" modifiers="{}"/>
+                            </h1>
+                            <h2 modifiers="{}">
+				                <field name="job_title" placeholder="Job Position" modifiers="{}"/>
+			                </h2>
+                        </div>
+                        <group>
+                            <group string="Private Information">
+                                <field name="employee_ref" invisible="True"/>
+                                <field name="document_type"/>
+                                <field name="identification_id"/>
+                                <field name="gender"/>
+                                <field name="marital"/>
+                            </group>
+                            <group string="Personal Information">
+                                <field name="job_id"/>
+                                <field name="country_id"/>
+                                <field name="mobile_phone"/>
+                                <field name="address_home"/>
+                                <field name="city"/>
+                            </group>
+                            <group string="Birth information">
+                                <field name="place_of_birth"/>
+                                <field name="country_of_birth"/>
+                                <field name="birthday"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_menu_cv">
             <field name="name">CV</field>
             <field name="res_model">hr.employee.cv</field>
