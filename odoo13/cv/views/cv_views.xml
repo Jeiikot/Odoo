@@ -32,13 +32,14 @@
                                 <field name="identification_id"/>
                                 <field name="gender"/>
                                 <field name="marital"/>
+                                <field name="address_home"/>
+                                <field name="city"/>
                             </group>
                             <group string="Personal Information">
                                 <field name="job_id"/>
                                 <field name="country_id"/>
                                 <field name="mobile_phone"/>
-                                <field name="address_home"/>
-                                <field name="city"/>
+                                <field name="email"/>
                             </group>
                             <group string="Birth information">
                                 <field name="place_of_birth"/>
@@ -47,6 +48,29 @@
                             </group>
                         </group>
                     </sheet>
+                    <notebook>
+                        <page string="Academic information">
+                            <separator string="Academic information"/>
+                            <field name="academic_line_ids">
+                                <tree editable="bottom">
+                                    <field name="certificate" required="True"/>
+                                    <field name="study_field" required="True"/>
+                                    <field name="study_school" required="True"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <div class="oe_title">
+                                            <h1>
+                                                <field name="certificate" required="True"/>
+                                            </h1>
+                                        </div>
+                                        <field name="study_field" required="True"/>
+                                        <field name="study_school" required="True"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>

@@ -4,8 +4,25 @@ import base64
 from odoo import models, fields, api, _
 from odoo.modules.module import get_module_resource
 
+class CvAcademic(models.Model):
+    _name = 'hr.employee.cv.academic'
 
-class CV(models.Model):
+    certificate = fields.Selection([
+        ('incomplete_bachelor', 'Bachiller Académico incompleto'),
+        ('academic_bachelor', 'Bachiller Académico'),
+        ('technical_bachelor', 'Bachiller Técnico'),
+        ('graduate', 'Pregrado/Universitario'),
+        ('specialization', 'Especialización'),
+        ('master', 'Maestría'),
+        ('doctorate', 'Doctorado'),
+        ('post_doctorate', 'PostDoctorado'),
+        ('other', 'Otro')
+    ], 'Certificate Level', default='academic_bachelor', groups="hr.group_hr_user")
+    study_field = fields.Char("Field of Study", placeholder='Computer Science', groups="hr.group_hr_user")
+    study_school = fields.Char("School", groups="hr.group_hr_user")
+    cv_id = fields.Many2one('hr.employee.cv', invisible=1, copy=False, string="Empleado")
+
+class Cv(models.Model):
     _name = 'hr.employee.cv'
 
     @api.model
@@ -40,6 +57,7 @@ class CV(models.Model):
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     address_home = fields.Char(groups="hr.group_hr_user")
     mobile_phone = fields.Char(groups="hr.group_hr_user")
+    email = fields.Char(groups="hr.group_hr_user")
     city = fields.Char(groups="hr.group_hr_user")
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user",
@@ -47,6 +65,7 @@ class CV(models.Model):
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
     job_id = fields.Many2one('hr.job', 'Job Position')
     job_title = fields.Char("Job Title")
+    academic_line_ids = fields.One2many('hr.employee.cv.academic', 'cv_id')
     employee_ref = fields.Many2one('hr.employee', invisible=1, copy=False, string="Employee")
 
     @api.onchange('job_id')
