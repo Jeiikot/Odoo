@@ -47,30 +47,30 @@
                                 <field name="birthday"/>
                             </group>
                         </group>
-                    </sheet>
-                    <notebook>
-                        <page string="Academic information">
-                            <separator string="Academic information"/>
-                            <field name="academic_line_ids">
-                                <tree editable="bottom">
-                                    <field name="certificate" required="True"/>
-                                    <field name="study_field" required="True"/>
-                                    <field name="study_school" required="True"/>
-                                </tree>
-                                <form>
-                                    <group>
-                                        <div class="oe_title">
-                                            <h1>
-                                                <field name="certificate" required="True"/>
-                                            </h1>
-                                        </div>
+                        <notebook>
+                            <page string="Academic information">
+                                <separator string="Academic information"/>
+                                <field name="academic_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="certificate" required="True"/>
                                         <field name="study_field" required="True"/>
                                         <field name="study_school" required="True"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </page>
-                    </notebook>
+                                    </tree>
+                                    <form>
+                                        <div class="oe_title">
+                                            <h1>
+                                                <field name="study_field" required="True" placeholder="Study field"/>
+                                            </h1>
+                                        </div>
+                                        <group>
+                                            <field name="certificate" required="True"/>
+                                            <field name="study_school" required="True"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
