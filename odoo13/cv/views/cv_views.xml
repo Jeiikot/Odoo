@@ -50,7 +50,7 @@
                         <notebook>
                             <page string="Academic information">
                                 <separator string="Academic information"/>
-                                <field name="academic_line_ids">
+                                <field name="academic_line_ids" mode="kanban">
                                     <tree editable="bottom">
                                         <field name="certificate" required="True"/>
                                         <field name="study_field" required="True"/>
@@ -67,6 +67,21 @@
                                             <field name="study_school" required="True"/>
                                         </group>
                                     </form>
+                                    <kanban>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_details">
+                                                        <h4 t-if="record.study_field.raw_value">
+                                                            <field name="study_field"/>
+                                                        </h4>
+                                                        <h8 t-if="record.study_school.raw_value">
+                                                            <field name="study_school"/>
+                                                        </h8>
+
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
                                 </field>
                             </page>
                         </notebook>
@@ -83,15 +98,17 @@
                     <field name="id"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div t-attf-class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                                 <img class="o_kanban_image_fill_left"
                                      t-att-src="kanban_image('hr.employee.cv','image_1920',record.id.raw_value)"/>
                                 <div class="oe_kanban_details">
-                                    <div class="o_kanban_record_headings">
-                                        <span t-if="record.name.raw_value" class="o_kanban_record_title">
-                                            <field name="name"/>
+                                    <div  t-if="record.name.raw_value" class="o_kanban_record_title">
+                                        <span>
+                                            <strong><field name="name"/></strong>
                                         </span>
-                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle">
+                                    </div>
+                                    <div t-if="record.job_title.raw_value" class="o_kanban_record_subtitle">
+                                        <span>
                                             <field name="job_title"/>
                                         </span>
                                     </div>
