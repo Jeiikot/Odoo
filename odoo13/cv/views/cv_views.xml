@@ -75,10 +75,46 @@
             </field>
         </record>
 
+        <record id="view_kanban_cv" model="ir.ui.view">
+            <field name="name">hr.employee.cv.kanban</field>
+            <field name="model">hr.employee.cv</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_cv_kanban">
+                    <field name="id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                <img class="o_kanban_image_fill_left"
+                                     t-att-src="kanban_image('hr.employee.cv','image_1920',record.id.raw_value)"/>
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_headings">
+                                        <span t-if="record.name.raw_value" class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </span>
+                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle">
+                                            <field name="job_title"/>
+                                        </span>
+                                    </div>
+                                    <ul>
+                                        <li t-if="record.email.raw_value" class="o_text_overflow">
+                                            <field name="email"/>
+                                        </li>
+                                        <li t-if="record.mobile_phone.raw_value" class="o_force_ltr">
+                                            <field name="mobile_phone"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_menu_cv">
             <field name="name">CV</field>
             <field name="res_model">hr.employee.cv</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Create the first CV</p>
             </field>
