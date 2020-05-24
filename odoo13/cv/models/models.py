@@ -17,9 +17,17 @@ class CvAcademic(models.Model):
         ('doctorate', 'Doctorado'),
         ('post_doctorate', 'PostDoctorado'),
         ('other', 'Otro')
-    ], 'Certificate Level', default='academic_bachelor', groups="hr.group_hr_user")
-    study_field = fields.Char("Field of Study", placeholder='Computer Science', groups="hr.group_hr_user")
-    study_school = fields.Char("School", groups="hr.group_hr_user")
+    ], 'Certificate Level', required=True, default='academic_bachelor', groups="hr.group_hr_user")
+    state = fields.Selection([
+        ('finished', 'Finished'),
+        ('studying', 'Studying'),
+        ('abandoned', 'Abandoned'),
+    ], required=True, default="studying", groups="hr.group_hr_user")
+    start_time = fields.Date("Start time", required=True, groups="hr.group_hr_user")
+    end_time = fields.Date("End of time", groups="hr.group_hr_user", required=True,
+                           states={'studying': [('required', False)]})
+    study_field = fields.Char("Field of Study", required=True, groups="hr.group_hr_user")
+    study_school = fields.Char("School", required=True, groups="hr.group_hr_user")
     cv_id = fields.Many2one('hr.employee.cv', invisible=1, copy=False, string="Empleado")
 
 class Cv(models.Model):

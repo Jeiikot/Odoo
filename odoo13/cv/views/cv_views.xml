@@ -52,32 +52,50 @@
                                 <separator string="Academic information"/>
                                 <field name="academic_line_ids" mode="kanban">
                                     <tree editable="bottom">
-                                        <field name="certificate" required="True"/>
-                                        <field name="study_field" required="True"/>
-                                        <field name="study_school" required="True"/>
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                        <field name="study_school"/>
+                                        <field name="start_time"/>
+                                        <field name="end_time"/>
                                     </tree>
                                     <form>
                                         <div class="oe_title">
                                             <h1>
-                                                <field name="study_field" required="True" placeholder="Study field"/>
+                                                <field name="study_field" placeholder="Study field"/>
                                             </h1>
                                         </div>
                                         <group>
-                                            <field name="certificate" required="True"/>
-                                            <field name="study_school" required="True"/>
+                                            <field name="certificate"/>
+                                            <field name="study_school"/>
+                                        </group>
+                                        <group>
+                                            <field name="state"/>
+                                            <label string="Period"/>
+                                            <div>
+                                                <field name="start_time" class="oe_inline"/>
+                                                <span attrs="{'invisible': [('state', '=', 'studying')]}"> - </span>
+                                                <field name="end_time" class="oe_inline"
+                                                           attrs="{'invisible': [('state', '=', 'studying')]}"/>
+                                            </div>
                                         </group>
                                     </form>
                                     <kanban>
                                         <templates>
                                             <t t-name="kanban-box">
-                                                <div class="oe_kanban_details">
-                                                        <h4 t-if="record.study_field.raw_value">
-                                                            <field name="study_field"/>
-                                                        </h4>
-                                                        <h8 t-if="record.study_school.raw_value">
-                                                            <field name="study_school"/>
-                                                        </h8>
-
+                                                <div t-attf-class="oe_kanban_global_click">
+                                                    <div class="oe_kanban_details">
+                                                            <h4 t-if="record.study_field.raw_value">
+                                                                <field name="study_field"/>
+                                                            </h4>
+                                                            <h8 t-if="record.study_school.raw_value">
+                                                                <field name="study_school"/>
+                                                            </h8>
+                                                            <div style="text-align:right;">
+                                                                <field name="start_time"/>
+                                                                <span t-if="record.end_time.raw_value"> - </span>
+                                                                <field name="end_time" t-if="record.end_time.raw_value"/>
+                                                            </div>
+                                                    </div>
                                                 </div>
                                             </t>
                                         </templates>
