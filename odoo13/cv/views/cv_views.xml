@@ -59,6 +59,8 @@
                                         <field name="end_time"/>
                                     </tree>
                                     <form>
+                                        <field name="image_1920" widget='image' class="oe_avatar"
+                                            options='{"zoom": true, "preview_image":"image_1920"}'/>
                                         <div class="oe_title">
                                             <h1>
                                                 <field name="study_field" placeholder="Study field"/>
@@ -80,9 +82,12 @@
                                         </group>
                                     </form>
                                     <kanban>
+                                        <field name="id"/>
                                         <templates>
                                             <t t-name="kanban-box">
-                                                <div t-attf-class="oe_kanban_global_click">
+                                                <div t-attf-class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                                    <img class="o_kanban_image_fill_left"
+                                                        t-att-src="kanban_image('hr.employee.cv.academic','image_1920',record.id.raw_value)"/>
                                                     <div class="oe_kanban_details">
                                                             <h4 t-if="record.study_field.raw_value">
                                                                 <field name="study_field"/>

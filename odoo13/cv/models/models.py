@@ -7,6 +7,12 @@ from odoo.modules.module import get_module_resource
 class CvAcademic(models.Model):
     _name = 'hr.employee.cv.academic'
 
+    @api.model
+    def _default_image(self):
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
+        return base64.b64encode(open(image_path, 'rb').read())
+
+    image_1920 = fields.Image(default=_default_image)
     certificate = fields.Selection([
         ('incomplete_bachelor', 'Bachiller Académico incompleto'),
         ('academic_bachelor', 'Bachiller Académico'),
