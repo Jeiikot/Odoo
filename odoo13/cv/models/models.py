@@ -5,6 +5,26 @@ from odoo import models, fields, api, _
 from odoo.modules.module import get_module_resource
 
 class CvAcademic(models.Model):
+    _name = 'hr.employee.cv.skill'
+
+    @api.model
+    def _default_image(self):
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
+        return base64.b64encode(open(image_path, 'rb').read())
+
+    image_1920 = fields.Image(default=_default_image)
+
+    name = fields.Char('Skill', groups="hr.group_hr_user")
+    state = fields.Selection([
+        ('0', 'Low'),
+        ('1', 'Medium'),
+        ('2', 'High'),
+        ('3', 'Very High'),
+    ], required=True, default="0", groups="hr.group_hr_user")
+    cv_id = fields.Many2one('hr.employee.cv', invisible=1, copy=False, string="Empleado")
+
+
+class CvAcademic(models.Model):
     _name = 'hr.employee.cv.academic'
 
     @api.model
@@ -80,6 +100,7 @@ class Cv(models.Model):
     job_id = fields.Many2one('hr.job', 'Job Position')
     job_title = fields.Char("Job Title")
     academic_line_ids = fields.One2many('hr.employee.cv.academic', 'cv_id')
+    skill_line_ids = fields.One2many('hr.employee.cv.skill', 'cv_id')
     employee_ref = fields.Many2one('hr.employee', invisible=1, copy=False, string="Employee")
 
     @api.onchange('job_id')

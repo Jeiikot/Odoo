@@ -48,7 +48,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Academic information">
+                            <page string="Academy">
                                 <separator string="Academic information"/>
                                 <field name="academic_line_ids" mode="kanban">
                                     <tree editable="bottom">
@@ -100,6 +100,41 @@
                                                                 <span t-if="record.end_time.raw_value"> - </span>
                                                                 <field name="end_time" t-if="record.end_time.raw_value"/>
                                                             </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+                            <page string="Skills">
+                                <field name="skill_line_ids" mode="kanban">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="state"/>
+                                    </tree>
+                                    <form>
+                                        <field name="image_1920" widget='image' class="oe_avatar"
+                                            options='{"zoom": true, "preview_image":"image_1920"}'/>
+                                        <div class="oe_title">
+                                            <h1>
+                                                <field name="name" placeholder="Skill"/>
+                                            </h1>
+                                        </div>
+                                        <field name="state"/>
+                                    </form>
+                                    <kanban>
+                                        <field name="id"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div t-attf-class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                                    <img class="o_kanban_image_fill_left"
+                                                        t-att-src="kanban_image('hr.employee.cv.skill','image_1920',record.id.raw_value)"/>
+                                                    <div class="oe_kanban_details">
+                                                        <h4 t-if="record.name.raw_value">
+                                                            <field name="name"/>
+                                                        </h4>
+                                                        <field name="state" widget="priority"/>
                                                     </div>
                                                 </div>
                                             </t>
