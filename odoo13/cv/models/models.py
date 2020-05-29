@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+
 import base64
 from odoo import models, fields, api, _
 from odoo.modules.module import get_module_resource
+from odoo.exceptions import ValidationError
 
 class CvAcademic(models.Model):
     _name = 'hr.employee.cv.skill'
@@ -22,7 +25,6 @@ class CvAcademic(models.Model):
         ('3', 'Very High'),
     ], required=True, default="0", groups="hr.group_hr_user")
     cv_id = fields.Many2one('hr.employee.cv', invisible=1, copy=False, string="Empleado")
-
 
 class CvAcademic(models.Model):
     _name = 'hr.employee.cv.academic'
@@ -51,10 +53,16 @@ class CvAcademic(models.Model):
     ], required=True, default="studying", groups="hr.group_hr_user")
     start_time = fields.Date("Start time", required=True, groups="hr.group_hr_user")
     end_time = fields.Date("End of time", groups="hr.group_hr_user", required=True,
-                           states={'studying': [('required', False)]})
+                           states={'studying': [('required', False)]}, default=datetime.today())
     study_field = fields.Char("Field of Study", required=True, groups="hr.group_hr_user")
     study_school = fields.Char("School", required=True, groups="hr.group_hr_user")
     cv_id = fields.Many2one('hr.employee.cv', invisible=1, copy=False, string="Empleado")
+
+    @api.constrains('start_time', 'end_time')
+    def check_dates(self):
+        for record in self:
+            if record.start_time > record.end_time:
+                raise ValidationError(_("'Date From' must be earlier 'Date To'."))
 
 class Cv(models.Model):
     _name = 'hr.employee.cv'
