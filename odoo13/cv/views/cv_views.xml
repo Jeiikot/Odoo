@@ -215,6 +215,6 @@
 
         <menuitem id="menu_cv_root" name="Curriculum Vitae"/>
 
-        <menuitem id="menu_cv" name="cv" parent="menu_cv_root" action="action_menu_cv"/>
+        <menuitem id="menu_cv" name="Cv" parent="menu_cv_root" action="action_menu_cv"/>
     </data>
 </odoo>
