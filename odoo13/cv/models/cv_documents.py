@@ -8,20 +8,26 @@ class HrEmployeeDocument(models.Model):
     _name = 'hr.employee.cv.document'
     _description = 'Cv Documents'
 
-    name = fields.Char(required=True, copy=False)
+    name = fields.Char('Document Name', required=True, copy=False)
+    description = fields.Text(string='Description', copy=False)
     doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
+    document_type = fields.Selection([
+        ('cv', 'Curriculum vitae'),
+        ('id', 'Identification document'),
+        ('jc', 'Job certificate'),
+        ('sc', 'Study certificate'),
+        ('other', 'Other')],
+        string='Document Type', required=True)
     cv_ref = fields.Many2one('hr.employee.cv', invisible=True, copy=False)
 
 class Cv(models.Model):
     _inherit = 'hr.employee.cv'
 
-
     def _document_count(self):
         for each in self:
             document_ids = self.env['hr.employee.cv.document'].search([('cv_ref', '=', each.id)])
             each.document_count = len(document_ids)
-
 
     def document_view(self):
         self.ensure_one()
