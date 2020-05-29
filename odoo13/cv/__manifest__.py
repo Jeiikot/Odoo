@@ -31,6 +31,7 @@
         'views/views.xml',
         'views/templates.xml',
         'views/cv_views.xml',
+        'views/cv_documents_view.xml',
         'security/ir.model.access.csv',
     ],
     # only loaded in demonstration mode

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="cv_document_inherit__form_view">
+            <field name="name">hr.employee.cv.document.form.view</field>
+            <field name="model">hr.employee.cv</field>
+            <field name="inherit_id" ref="cv.view_form_cv"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/field[@name='image_1920']" position="before">
+                    <div class="oe_button_box">
+                        <button class="oe_stat_button" name="document_view" type="object" icon="fa-list-ol">
+                            <field string="Documents" name="document_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='employee_document_form_view'>
+            <field name="name">hr.employee.cv.document.form</field>
+            <field name="model">hr.employee.cv.document</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="cv_ref" invisible="True"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

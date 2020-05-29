@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_emplooye_cv,access.hr.employee.cv,model_hr_employee_cv,base.group_user,1,1,1,1
 access_hr_emplooye_cv_academic,access.hr.employee.cv.academic,model_hr_employee_cv_academic,base.group_user,1,1,1,1
 access_hr_emplooye_cv_skill,access.hr.employee.cv.skill,model_hr_employee_cv_skill,base.group_user,1,1,1,1
+access_hr_emplooye_cv_document,access.hr.employee.cv.document,model_hr_employee_cv_document,base.group_user,1,1,1,1
