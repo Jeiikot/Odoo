@@ -18,7 +18,7 @@ class HrEmployeeDocument(models.Model):
         ('jc', 'Job certificate'),
         ('sc', 'Study certificate'),
         ('other', 'Other')],
-        string='Document Type', required=True)
+        default="cv", string='Document Type', required=True)
     cv_ref = fields.Many2one('hr.employee.cv', invisible=True, copy=False)
 
 class Cv(models.Model):
