@@ -9,6 +9,8 @@ class HrEmployeeDocument(models.Model):
     _description = 'Cv Documents'
 
     name = fields.Char(required=True, copy=False)
+    doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
+                                         help='You can attach the copy of your document', copy=False)
     cv_ref = fields.Many2one('hr.employee.cv', invisible=True, copy=False)
 
 class Cv(models.Model):
@@ -41,3 +43,9 @@ class Cv(models.Model):
         }
 
     document_count = fields.Integer(compute='_document_count', string='# Documents')
+
+class CvAttachment(models.Model):
+    _inherit = 'ir.attachment'
+
+    doc_attach_rel = fields.Many2many('hr.employee.cv.document', 'doc_attachment_id', 'attach_id3', 'doc_id',
+                                      string="Attachment", invisible=True)

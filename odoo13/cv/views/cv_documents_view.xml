@@ -26,6 +26,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="cv_ref" invisible="True"/>
+                                <field name="doc_attachment_id" widget="many2many_binary" class="oe_inline"/>
                             </group>
                         </group>
                     </sheet>
