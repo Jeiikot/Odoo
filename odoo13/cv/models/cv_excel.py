@@ -25,7 +25,10 @@ class CvReportExcelWizard(models.TransientModel):
         workbook.close()
         file_download = base64.b64encode(fp.getvalue())
         fp.close()
-        excel_context = self.with_context(default_name=file_name, default_file_download=file_download)
+        # Two Alternative
+        #excel_context = self.with_context(default_name=file_name, default_file_download=file_download)
+        # 'context': excel_context._context,
+        dict_context = {'default_name': file_name, 'default_file_download': file_download}
 
         return {
             'name': 'cv report Download',
@@ -34,7 +37,7 @@ class CvReportExcelWizard(models.TransientModel):
             'res_model': 'hr.employee.cv.report.excel',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': excel_context._context,
+            'context': dict_context,
         }
 
 
