@@ -3,13 +3,29 @@
     <data>
 
         <record model="ir.ui.view" id="view_cv_report_view_form">
-            <field name="name">hr.employee.cv.report.wizard.form</field>
+            <field name="name">cv.report.wizard.form</field>
             <field name="model">hr.employee.cv.report.wizard</field>
             <field name="arch" type="xml">
                 <form string="CV Report">
                     <group colspan="4" col="4">
                         <field name="employee_ref"/>
                     </group>
+                    <footer>
+                        <button name="get_item_data" type="object" string="Print" class="oe_highlight"/>
+                        Or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_cv_excel">
+            <field name="name">view.cv.report.excel</field>
+            <field name="model">hr.employee.cv.report.excel</field>
+            <field name="arch" type="xml">
+                <form string="Download Your CV Report Here">
+                    <field name="name" invisible="1"/>
+                    <field name="file_download" filename="name"/>
                 </form>
             </field>
         </record>

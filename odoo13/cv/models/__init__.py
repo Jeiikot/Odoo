@@ -2,3 +2,4 @@
 
 from . import models
 from . import cv_documents
+from . import cv_excel
