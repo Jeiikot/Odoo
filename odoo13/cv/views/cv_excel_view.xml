@@ -11,7 +11,7 @@
                         <field name="employee_ref"/>
                     </group>
                     <footer>
-                        <button name="get_item_data" type="object" string="Print" class="oe_highlight"/>
+                        <button name="get_excel" type="object" string="Print" class="oe_highlight"/>
                         Or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>

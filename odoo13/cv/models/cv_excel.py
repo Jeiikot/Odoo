@@ -12,7 +12,7 @@ class CvReportExcelWizard(models.TransientModel):
 
     employee_ref = fields.Many2one('hr.employee', invisible=1, copy=False, string="Employee")
 
-    def get_item_data(self):
+    def get_excel(self):
         file_name = _('cv report.xlsx')
         fp = BytesIO()
 
