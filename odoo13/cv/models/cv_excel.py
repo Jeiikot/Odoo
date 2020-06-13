@@ -6,6 +6,7 @@ import base64
 from io import BytesIO
 
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 import xlsxwriter
 
@@ -18,6 +19,11 @@ class CvReportExcelWizard(models.TransientModel):
         , required=True, default="0", string='Employee Filter')
     employee_ref = fields.Many2one('hr.employee', invisible=1, copy=False, string="Employee", required=True,
                                    states={'1': [('required', False)]})
+    def check_cv(self):
+        cv_lines = self.env['hr.employee.cv'].search([('employee_ref.id', '=', self.employee_ref.id)])
+        if len(cv_lines) == 0:
+            raise ValidationError(_("Employee's  CV was not found"))
+
 
     def get_excel(self):
         file_name = _('cv report.xlsx')
@@ -25,6 +31,7 @@ class CvReportExcelWizard(models.TransientModel):
 
         workbook = xlsxwriter.Workbook(fp)
 
+        self.check_cv()
         self.get_data(workbook)
 
         workbook.close()
@@ -106,7 +113,7 @@ class CvReportExcelWizard(models.TransientModel):
             worksheet.write(7 + rows, 5, "%s" % line.job_id.name if line.job_id.name!=False else '', cell_text_format_2)
             worksheet.write(7 + rows, 6, "%s" % line.email if line.email!=False else '', cell_text_format_2)
             worksheet.write(7 + rows, 7, "%s" % line.mobile_phone if line.mobile_phone!=False else '', cell_text_format_2)
-            if line.academic_line_ids != None:
+            if len(line.academic_line_ids) != 0:
                 study_field, study_school, state = str(), str(), str()
                 for academic_line in line.academic_line_ids:
                     study_field += "%s \n" % academic_line.study_field
