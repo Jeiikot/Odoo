@@ -7,8 +7,13 @@
             <field name="model">hr.employee.cv.report.wizard</field>
             <field name="arch" type="xml">
                 <form string="CV Report">
-                    <group colspan="4" col="4">
-                        <field name="employee_ref"/>
+                    <group>
+                        <group>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="employee_ref" attrs="{'invisible': [('state', '=', '1')]}"/>
+                        </group>
                     </group>
                     <footer>
                         <button name="get_excel" type="object" string="Print" class="oe_highlight"/>
