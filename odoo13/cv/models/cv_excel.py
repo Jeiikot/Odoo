@@ -73,9 +73,9 @@ class CvReportExcelWizard(models.TransientModel):
         worksheet.merge_range('A1:F2', 'Curriculum Vitae', heading_format)
         worksheet.write('F3', "%s %s %s" % (today.day, today.strftime("%B"), today.year), cell_text_format_1)
 
-        cv_academic_lines = self.env['hr.employee.cv'].search([('employee_ref.id', '=', self.employee_ref.id)])
-        temp = 0
-        for line in cv_academic_lines:
+        cv_lines = self.env['hr.employee.cv'].search([('employee_ref.id', '=', self.employee_ref.id)])
+        cols = 0
+        for line in cv_lines:
             worksheet.write(6, 0, "Employee", cell_text_format_1)
             worksheet.write(6, 1, "Nationality", cell_text_format_1)
             worksheet.write(6, 2, "Document Type", cell_text_format_1)
@@ -84,16 +84,34 @@ class CvReportExcelWizard(models.TransientModel):
             worksheet.write(6, 5,  "Job Position", cell_text_format_1)
             worksheet.write(6, 6,  "Email", cell_text_format_1)
             worksheet.write(6, 7,  "Mobile Phone", cell_text_format_1)
+            worksheet.write(6, 8, "Field of Study", cell_text_format_1)
+            worksheet.write(6, 9, "School", cell_text_format_1)
+            worksheet.write(6, 10, "State", cell_text_format_1)
 
-            worksheet.write(7, 0 + temp, "%s" % line.name if line.name!=False else '', cell_text_format_2)
-            worksheet.write(7, 1 + temp, "%s" % line.country_id.name if line.country_id!=False else '', cell_text_format_2)
-            worksheet.write(7, 2 + temp, "%s" % line.document_type if line.document_type!=False else '', cell_text_format_2)
-            worksheet.write(7, 3 + temp, "%s" % line.identification_id if line.identification_id!=False else '', cell_text_format_2)
-            worksheet.write(7, 4 + temp, "%s" % line.gender if line.gender!=False else '', cell_text_format_2)
-            worksheet.write(7, 5 + temp, "%s" % line.job_id.name if line.job_id.name!=False else '', cell_text_format_2)
-            worksheet.write(7, 6 + temp, "%s" % line.email if line.email!=False else '', cell_text_format_2)
-            worksheet.write(7, 7 + temp, "%s" % line.mobile_phone if line.mobile_phone!=False else '', cell_text_format_2)
-            temp+=1
+            worksheet.write(7, 0 + cols, "%s" % line.name if line.name!=False else '', cell_text_format_2)
+            worksheet.write(7, 1 + cols, "%s" % line.country_id.name if line.country_id!=False else '', cell_text_format_2)
+            worksheet.write(7, 2 + cols, "%s" % line.document_type if line.document_type!=False else '', cell_text_format_2)
+            worksheet.write(7, 3 + cols, "%s" % line.identification_id if line.identification_id!=False else '', cell_text_format_2)
+            worksheet.write(7, 4 + cols, "%s" % line.gender if line.gender!=False else '', cell_text_format_2)
+            worksheet.write(7, 5 + cols, "%s" % line.job_id.name if line.job_id.name!=False else '', cell_text_format_2)
+            worksheet.write(7, 6 + cols, "%s" % line.email if line.email!=False else '', cell_text_format_2)
+            worksheet.write(7, 7 + cols, "%s" % line.mobile_phone if line.mobile_phone!=False else '', cell_text_format_2)
+            if line.academic_line_ids != None:
+                study_field, study_school, state = str(), str(), str()
+                for academic_line in line.academic_line_ids:
+                    study_field += "%s \n" % academic_line.study_field
+                    study_school += "%s \n" % academic_line.study_school
+                    state += "%s \n" % academic_line.state
+                worksheet.write(7, 8 + cols, "%s" % study_field if study_field != None else "", cell_text_format_2)
+                worksheet.write(7, 9 + cols, "%s" % study_school if study_school != None else "", cell_text_format_2)
+                worksheet.write(7, 10 + cols, "%s" % state if state != None else "", cell_text_format_2)
+            else:
+                cols += 1
+
+
+
+
+
 
 
 
