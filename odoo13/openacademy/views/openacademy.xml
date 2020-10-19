@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+    <!-- Form views -->
     <record model="ir.ui.view" id="course_form_view">
         <field name="name">course.form</field>
         <field name="model">openacademy.course</field>
@@ -22,6 +23,19 @@
             </form>
         </field>
     </record>
+
+    <!-- Search views -->
+    <record model="ir.ui.view" id="course_search_view">
+        <field name="name">course.search</field>
+        <field name="model">openacademy.course</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="description"/>
+            </search>
+        </field>
+    </record>
+
 
     <!-- window action -->
     <!--
