@@ -106,8 +106,10 @@
                             <field name="start_date"/>
                             <field name="duration"/>
                             <field name="seats"/>
-                        </group>
+                        </group>                        
                     </group>
+                    <label for="attendee_ids"/>
+                    <field name="attendee_ids"/>
                 </sheet>
             </form>
         </field>
