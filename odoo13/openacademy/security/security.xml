@@ -1,0 +1,11 @@
+<odoo>
+
+    <record id="group_manager" model="res.groups">
+        <field name="name">OpenAcademy / Manager</field>
+    </record>
+    
+    <record id="group_read" model="res.groups">
+        <field name="name">OpenAcademy / Read</field>
+    </record>
+
+</odoo>
