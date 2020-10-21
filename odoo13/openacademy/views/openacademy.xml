@@ -228,6 +228,12 @@
                     <field name="session_id"/>
                     <field name="attendee_ids"/>
                 </group>
+                <footer>
+                    <button name="subscribe" type="object"
+                            string="Subscribe" class="oe_highlight"/>
+                        or
+                    <button special="cancel" string="Cancel"/>
+                </footer>
             </form>
         </field>
     </record>
@@ -238,5 +244,5 @@
                 res_model="openacademy.wizard"
                 view_mode="form"
                 target="new"/>
-                                
+
 </odoo>
