@@ -30,6 +30,7 @@
         'views/templates.xml',
         'views/openacademy.xml',
         'views/partner.xml',
+        'reports/reports.xml',
 
     ],
     # only loaded in demonstration mode
