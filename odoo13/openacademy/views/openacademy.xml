@@ -82,7 +82,7 @@
     
     <!-- A first level in the left side menu is needed
             before using action= attribute -->
-    <menuitem id="openacademy_menu" name="Open Academy" sequence="0"
+    <menuitem id="openacademy_menu" name="Open Academy" sequence="1"
                 parent="main_openacademy_menu"/>
     
     <!-- the following menuitem should appear *after*
