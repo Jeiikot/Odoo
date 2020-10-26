@@ -20,7 +20,9 @@
             <div class="oe_structure"/>
             <div class="oe_structure">
                 <div class="container">
-                    <h3><t t-esc="person.name"/></h3>
+                    <h3 t-field="person.name"/>
+                    <p>Last modified: <i t-field="person.write_date" t-options='{"widget": "relative"}'/></p>
+                    <div t-field="person.biography"/>
                 </div>
             </div>
             <div class="oe_structure"/>
