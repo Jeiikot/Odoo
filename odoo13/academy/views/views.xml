@@ -21,6 +21,11 @@
                                 <field name="name"/>
                             </tree>
                         </field>
+<!--                        <field name="category_course_ids">-->
+<!--                            <tree string="Category Courses" editable="bottom">-->
+<!--                                <field name="name"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
                     </group>
                 </sheet>
           </form>
