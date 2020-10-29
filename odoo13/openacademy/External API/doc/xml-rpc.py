@@ -50,7 +50,6 @@ models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 #     'res.partner', 'check_access_rights',
 #     ['read'], {'raise_exception': False}))
 
-
 """
     List records
 
@@ -106,3 +105,32 @@ can read, which tends to be a huge amount.
 # print(models.execute_kw(db, uid, password,
 #     name_model, 'read',
 #     [ids], {'fields': ['name', 'course_id', 'attendee_ids']}))
+
+"""
+    Listing record fields
+
+fields_get() can be used to inspect a model’s fields and check which ones seem to be of interest.
+
+Because it returns a large amount of meta-information (it is also used by client programs) 
+it should be filtered before printing, the most interesting items for a human user are string 
+(the field’s label), help (a help text if available) and type (to know which values to expect, 
+or to send when updating a record):
+"""
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'fields_get',
+#     [], {'attributes': ['string', 'help', 'type']}))
+
+"""
+Search and read
+
+Because it is a very common task, Odoo provides a search_read() shortcut which as its name suggests 
+is equivalent to a search() followed by a read(), but avoids having to perform two requests and keep 
+ids around.
+
+Its arguments are similar to search()’s, but it can also take a list of fields (like read(), 
+if that list is not provided it will fetch all fields of matched records):
+"""
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'search_read',
+#     [[['active', '=', True]]],
+#     {'fields': ['name', 'course_id', 'attendee_ids'], 'limit': 5}))
