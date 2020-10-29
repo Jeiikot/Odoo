@@ -72,3 +72,37 @@ offset and limit parameters are available to only retrieve a subset of all match
 #     [[['active', '=', True]]],
 #     {'limit': 5})
 # )
+
+"""
+    Count records
+
+Rather than retrieve a possibly gigantic list of records and count them, 
+search_count() can be used to retrieve only the number of records matching the query. 
+It takes the same domain filter as search() and no other parameter.
+"""
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'search_count',
+#     [[['active', '=', True]]]))
+
+"""
+Read records
+
+Record data is accessible via the read() method, which takes a list of ids (as returned by search()) 
+and optionally a list of fields to fetch. By default, it will fetch all the fields the current user 
+can read, which tends to be a huge amount.
+"""
+# ids = models.execute_kw(db, uid, password,
+#     name_model, 'search',
+#     [[['active', '=', True]]],
+#     {'limit': 1})
+# print(ids)
+#
+# [record] = models.execute_kw(db, uid, password,
+#     name_model, 'read', [ids])
+# # count the number of fields fetched by default
+# print(len(record), record['name'])
+#
+# # Conversedly, picking only three fields deemed interesting.
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'read',
+#     [ids], {'fields': ['name', 'course_id', 'attendee_ids']}))
