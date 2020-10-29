@@ -46,6 +46,29 @@ name_model ="openacademy.session"
 #name_model = input("Name of model:")
 
 models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(url))
-# models.execute_kw(db, uid, password,
+# print(models.execute_kw(db, uid, password,
 #     'res.partner', 'check_access_rights',
-#     ['read'], {'raise_exception': False})
+#     ['read'], {'raise_exception': False}))
+
+
+"""
+    List records
+
+Records can be listed and filtered via search().
+
+search() takes a mandatory domain filter (possibly empty), and returns the database identifiers of all 
+records matching the filter. To list customer companies for instance:
+
+    Pagination
+
+By default a search will return the ids of all records matching the condition, which may be a huge number. 
+offset and limit parameters are available to only retrieve a subset of all matched records.
+"""
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'search',
+#     [[['active', '=', True]]]))
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'search',
+#     [[['active', '=', True]]],
+#     {'limit': 5})
+# )
