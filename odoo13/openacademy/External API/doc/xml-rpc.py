@@ -121,7 +121,7 @@ or to send when updating a record):
 #     [], {'attributes': ['string', 'help', 'type']}))
 
 """
-Search and read
+    Search and read
 
 Because it is a very common task, Odoo provides a search_read() shortcut which as its name suggests 
 is equivalent to a search() followed by a read(), but avoids having to perform two requests and keep 
@@ -134,3 +134,27 @@ if that list is not provided it will fetch all fields of matched records):
 #     name_model, 'search_read',
 #     [[['active', '=', True]]],
 #     {'fields': ['name', 'course_id', 'attendee_ids'], 'limit': 5}))
+
+"""
+    Create records
+
+Records of a model are created using create(). The method will create a single record and return 
+its database identifier.
+
+create() takes a mapping of fields to values, used to initialize the record. 
+For any field which has a default value and is not set through the mapping argument, the default 
+value will be used.
+
+    Warning
+
+while most value types are what would be expected (integer for Integer, string for Char or Text),
+
+    Date, Datetime and Binary fields use string values
+    One2many and Many2many use a special command protocol detailed in the documentation to the write method.
+"""
+# id = models.execute_kw(db, uid, password,
+#     name_model, 'create', [{
+#     'name': "Session New",
+#     'course_id': 2
+# }])
+# print(id)
