@@ -84,7 +84,7 @@ It takes the same domain filter as search() and no other parameter.
 #     [[['active', '=', True]]]))
 
 """
-Read records
+    Read records
 
 Record data is accessible via the read() method, which takes a list of ids (as returned by search()) 
 and optionally a list of fields to fetch. By default, it will fetch all the fields the current user 
@@ -160,7 +160,7 @@ while most value types are what would be expected (integer for Integer, string f
 # print(id)
 
 """
-Update records
+    Update records
 
 Records can be updated using write(), it takes a list of records to update and a mapping of updated 
 fields to values similar to create().
@@ -172,5 +172,20 @@ depends on an existing value of a record).
 # id = 1
 # models.execute_kw(db, uid, password,
 #     name_model, 'write', [[id], {
-#     'name': "Session I"
+#     'name': "Session 1"
 # }])
+#
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'name_get', [[id]]))
+
+"""
+    Delete records
+
+Records can be deleted in bulk by providing their ids to unlink().
+"""
+id = 19
+models.execute_kw(db, uid, password,
+    name_model, 'unlink', [[id]])
+# check if the deleted record is still in the database
+print(models.execute_kw(db, uid, password,
+    name_model, 'search', [[['id', '=', id]]]))
