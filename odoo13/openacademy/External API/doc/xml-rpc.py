@@ -206,3 +206,27 @@ both querying the system and altering models and fields (with some limitations) 
 # print(models.execute_kw(db, uid, password,
 #     'x_custom_model', 'fields_get',
 #     [], {'attributes': ['string', 'help', 'type']}))
+
+
+id = models.execute_kw(db, uid, password,
+    'ir.model', 'create', [{
+    'name': "Custom Model",
+    'model': "x_custom",
+    'state': 'manual',
+    'access_ids': [uid]
+}])
+models.execute_kw(db, uid, password,
+    'ir.model.fields', 'create', [{
+    'model_id': id,
+    'name': 'x_name2',
+    'ttype': 'char',
+    'state': 'manual',
+    'required': True,
+    }])
+# Active access_ids
+record_id = models.execute_kw(db, uid, password,
+    'x_custom', 'create', [{
+    'x_name2': "test record",
+    }])
+print(models.execute_kw(db, uid, password,
+    'x_custom', 'read', [[record_id]]))
