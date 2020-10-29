@@ -183,9 +183,26 @@ depends on an existing value of a record).
 
 Records can be deleted in bulk by providing their ids to unlink().
 """
-id = 19
-models.execute_kw(db, uid, password,
-    name_model, 'unlink', [[id]])
-# check if the deleted record is still in the database
-print(models.execute_kw(db, uid, password,
-    name_model, 'search', [[['id', '=', id]]]))
+# id = 19
+# models.execute_kw(db, uid, password,
+#     name_model, 'unlink', [[id]])
+# # check if the deleted record is still in the database
+# print(models.execute_kw(db, uid, password,
+#     name_model, 'search', [[['id', '=', id]]]))
+
+"""
+    Inspection and introspection
+
+While we previously used fields_get() to query a model and have been using an arbitrary 
+model from the start, Odoo stores most model metadata inside a few meta-models which allow 
+both querying the system and altering models and fields (with some limitations) on the fly over XML-RPC.
+"""
+# models.execute_kw(db, uid, password,
+#     'ir.model', 'create', [{
+#     'name': "Custom Model",
+#     'model': "x_custom_model",
+#     'state': 'manual',
+# }])
+# print(models.execute_kw(db, uid, password,
+#     'x_custom_model', 'fields_get',
+#     [], {'attributes': ['string', 'help', 'type']}))
