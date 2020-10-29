@@ -158,3 +158,19 @@ while most value types are what would be expected (integer for Integer, string f
 #     'course_id': 2
 # }])
 # print(id)
+
+"""
+Update records
+
+Records can be updated using write(), it takes a list of records to update and a mapping of updated 
+fields to values similar to create().
+
+Multiple records can be updated simultanously, but they will all get the same values for the fields 
+being set. It is not currently possible to perform “computed” updates (where the value being set 
+depends on an existing value of a record).
+"""
+# id = 1
+# models.execute_kw(db, uid, password,
+#     name_model, 'write', [[id], {
+#     'name': "Session I"
+# }])
