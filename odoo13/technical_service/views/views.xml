@@ -12,7 +12,7 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create the First Request
+                Create the First Technical Service Request
             </p>
         </field>
     </record>
@@ -34,7 +34,7 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create the First Stage
+                Create the First Technical Service Stage
             </p>
         </field>
     </record>
@@ -42,8 +42,22 @@
     <menuitem id="technical_service_conf_menu" name="Configuration" sequence="2"
                 parent="main_technical_service_menu"/>
 
-    <menuitem id="technical_service_stage" name="Technical Service Stage" parent="technical_service_conf_menu" sequence="0"
+    <menuitem id="technical_service_stage" name="Service Stage" parent="technical_service_conf_menu" sequence="0"
                 action="stage_list_action"/>
+
+    <record model="ir.actions.act_window" id="category_list_action">
+        <field name="name">Service Category</field>
+        <field name="res_model">technical_service.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the First Service Categry
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="technical_service_category" name="Service Category" parent="technical_service_conf_menu" sequence="1"
+                action="category_list_action"/>
 
   </data>
 </odoo>

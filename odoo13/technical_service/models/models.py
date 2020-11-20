@@ -41,7 +41,6 @@ class technicalServiceRequest(models.Model):
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
-
     schedule_date = fields.Datetime('Scheduled Date', required=True,
         help="Date the Technical Service team plans the service.  It should not differ much from the Request Date. ")
     start_date = fields.Datetime('Start Date')
