@@ -58,3 +58,9 @@ class technicalServiceRequest(models.Model):
         for record in self:
             if record.end_date < record.start_date:
                 raise exceptions.ValidationError(_("The start date must be less than the end date."))
+
+    @api.constrains('stage_id', 'end_date')
+    def _check_done(self):
+        for record in self:
+            if not record.end_date and record.stage_id.name.upper() == "DONE":
+                raise exceptions.ValidationError(_("The stage cannot be completed if there is no end date."))
