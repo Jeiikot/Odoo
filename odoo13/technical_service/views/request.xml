@@ -39,6 +39,7 @@
                                     <field name="start_date"/>
                                     <field name="worked_hours"/>
                                     <field name="normal_hours"/>
+                                    <field name="hours_nigth"/>
                                 </group>
                                 <group>
                                     <field name="end_date"/>

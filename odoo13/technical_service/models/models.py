@@ -45,7 +45,8 @@ class technicalServiceRequest(models.Model):
     worked_hours = fields.Float(string='Worked Hours',
         compute='_compute_worked_hours', store=True, readonly=True)
 
-    normal_hours = fields.Float(' Normal Hours')
+    normal_hours = fields.Float('Normal Hours')
+    hours_nigth = fields.Float('Hours at Nigth')
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
@@ -93,6 +94,7 @@ class technicalServiceRequest(models.Model):
                 end_date = datetime.datetime.strptime(
                     fields.Datetime.to_string(record.end_date.astimezone(local)),
                     '%Y-%m-%d %H:%M:%S')
+
                 """
                     Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
                 """
@@ -104,6 +106,20 @@ class technicalServiceRequest(models.Model):
                     if record.normal_hours < 0: record.normal_hours = 0
                 else:
                     record.normal_hours = 0
+
+                """
+                    Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
+                """
+                if (start_date.hour > 20.0 or end_date.hour < 7.0) and (start_date.weekday() != 6):
+                    if start_date.hour > 20.0 and end_date < 7.0:
+                        record.hours_nigth = (23 - end_date.hour) - 20.0
+                    if (start_date.hour > 0.0 and end_date < 7.0) \
+                            or (start_date.hour > 20.0 and end_date.hour < 24.0):
+                        record.hours_nigth = end_date - start_date
+                    if record.hours_nigth < 0: record.hours_nigth = 0
+                else:
+                    record.hours_nigth = 0
+
             else:
                 record.worked_hours = False
 
