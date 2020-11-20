@@ -39,7 +39,7 @@
         </field>
     </record>
 
-    <menuitem id="technical_service_conf_menu" name="configuration" sequence="2"
+    <menuitem id="technical_service_conf_menu" name="Configuration" sequence="2"
                 parent="main_technical_service_menu"/>
 
     <menuitem id="technical_service_stage" name="Technical Service Stage" parent="technical_service_conf_menu" sequence="0"
