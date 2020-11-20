@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions, _
 
 
 class technicalServiceStage(models.Model):
@@ -53,3 +53,8 @@ class technicalServiceRequest(models.Model):
     stage_id = fields.Many2one('technical_service.stage', string='Stage', ondelete='restrict',
                                tracking=True, default=_default_stage, copy=False)
 
+    @api.constrains('start_date', 'end_date')
+    def _check_dates(self):
+        for record in self:
+            if record.end_date < record.start_date:
+                raise exceptions.ValidationError(_("The start date must be less than the end date."))
