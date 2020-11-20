@@ -45,7 +45,7 @@ class technicalServiceRequest(models.Model):
     worked_hours = fields.Float(string='Worked Hours',
         compute='_compute_worked_hours', store=True, readonly=True)
 
-    normal_hours = fields.Float('Normal Hours')
+    normal_hours = fields.Char('Normal Hours')
     hours_nigth = fields.Float('Hours at Nigth')
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
@@ -98,29 +98,51 @@ class technicalServiceRequest(models.Model):
                 """
                     Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
                 """
-                if (start_date.hour >= 7.0 or end_date.hour < 20.0) and (start_date.weekday() != 6):
-                    if not start_date.hour >= 7.0:
-                        record.normal_hours = end_date.hour - 7
-                    if not end_date.hour < 20.0:
-                        record.normal_hours = 20 - start_date.hour
-                    if record.normal_hours < 0: record.normal_hours = 0
-                else:
-                    record.normal_hours = 0
+                # if (start_date.hour >= 7.0 or end_date.hour < 20.0) and (start_date.weekday() != 6):
+                #     if not start_date.hour >= 7.0:
+                #         record.normal_hours = end_date.hour - 7
+                #     if not end_date.hour < 20.0:
+                #         record.normal_hours = 20 - start_date.hour
+                #     if record.normal_hours < 0: record.normal_hours = 0
+                # else:
+                #     record.normal_hours = 0
+                record.normal_hours = str(self.get_worked_hours(start_date, end_date))
 
-                """
-                    Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
-                """
-                if (start_date.hour >= 20.0 or end_date.hour < 7.0) and (start_date.weekday() != 6):
-                    if start_date.hour >= 20.0 and end_date < 7.0:
-                        record.hours_nigth = (23 - end_date.hour) - 20.0
-                    if (start_date.hour >= 0.0 and end_date.hour < 7.0) \
-                            or (start_date.hour > 20.0 and end_date.hour < 24.0):
-                        record.hours_nigth = end_date.hour - start_date.hour
-                    if record.hours_nigth < 0: record.hours_nigth = 0
-                else:
-                    record.hours_nigth = 0
+                # """
+                #     Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
+                # """
+                # if (start_date.hour >= 20.0 or end_date.hour < 7.0) and (start_date.weekday() != 6):
+                #     if start_date.hour >= 20.0 and end_date < 7.0:
+                #         record.hours_nigth = (23 - end_date.hour) - 20.0
+                #     if (start_date.hour >= 0.0 and end_date.hour < 7.0) \
+                #             or (start_date.hour > 20.0 and end_date.hour < 24.0):
+                #         record.hours_nigth = end_date.hour - start_date.hour
+                #     if record.hours_nigth < 0: record.hours_nigth = 0
+                # else:
+                #     record.hours_nigth = 0
 
             else:
                 record.worked_hours = False
 
 
+    def get_worked_hours(self, start_date, end_date):
+        start_day = int(start_date.weekday())
+        start_hour = int(start_date.hour)
+        end_day = int(end_date.weekday())
+        end_hour = int(end_date.hour)
+
+        dict_hours = dict()
+        if start_day == end_day:
+            dict_hours = {
+                start_day: [hour for hour in range(start_hour, end_hour + 1)]
+            }
+            print(dict_hours)
+        else:
+            for day in range(start_day, end_day + 1):
+                if day == start_day:
+                    dict_hours[day] = [hour for hour in range(start_hour, 24)]
+                if day == end_day:
+                    dict_hours[day] = [hour for hour in range(0, end_hour + 1)]
+                if day != start_day and day != end_day:
+                    dict_hours[day] = [hour for hour in range(0, 24)]
+        return dict_hours
