@@ -38,6 +38,8 @@ class technicalServiceRequest(models.Model):
         ('1', 'Low'),
         ('2', 'Normal'),
         ('3', 'High')], string='Priority')
+    worked_hours = fields.Float(string='Worked Hours',
+        compute='_compute_worked_hours', store=True, readonly=True)
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
@@ -64,3 +66,12 @@ class technicalServiceRequest(models.Model):
         for record in self:
             if not record.end_date and record.stage_id.done == True:
                 raise exceptions.ValidationError(_("The stage cannot be completed if there is no end date."))
+
+    @api.depends('start_date', 'end_date')
+    def _compute_worked_hours(self):
+        for record in self:
+            if record.end_date:
+                delta = record.end_date - record.start_date
+                record.worked_hours = delta.total_seconds() / 3600.0
+            else:
+                record.worked_hours = False
