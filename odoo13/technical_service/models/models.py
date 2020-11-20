@@ -45,7 +45,7 @@ class technicalServiceRequest(models.Model):
     worked_hours = fields.Float(string='Worked Hours',
         compute='_compute_worked_hours', store=True, readonly=True)
 
-    worked_hours1 = fields.Float()
+    normal_hours = fields.Float(' Normal Hours')
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
@@ -80,22 +80,33 @@ class technicalServiceRequest(models.Model):
 
     @api.depends('start_date', 'end_date')
     def _compute_worked_hours(self):
-        # user_tz = self.env.user.tz or pytz.utc
-        # local = pytz.timezone(user_tz)
+        user_tz = self.env.user.tz or pytz.utc
+        local = pytz.timezone(user_tz)
         for record in self:
-            # if record.start_date:
-            #     start_date = datetime.datetime.strptime(
-            #         fields.Datetime.to_string(record.start_date.astimezone(local)),
-            #         '%Y-%m-%d %H:%M:%S')
-            # if record.end_date:
-            #     end_date = datetime.datetime.strptime(
-            #         fields.Datetime.to_string(record.end_date.astimezone(local)),
-            #         '%Y-%m-%d %H:%M:%S')
-            # if start_date.hour > 7 and start_date < 20:
-            #     record.worked_hours1 = 1
-
             if record.end_date and record.start_date:
                 delta = record.end_date - record.start_date
                 record.worked_hours = delta.total_seconds() / 3600.0
+
+                start_date = datetime.datetime.strptime(
+                    fields.Datetime.to_string(record.start_date.astimezone(local)),
+                    '%Y-%m-%d %H:%M:%S')
+                end_date = datetime.datetime.strptime(
+                    fields.Datetime.to_string(record.end_date.astimezone(local)),
+                    '%Y-%m-%d %H:%M:%S')
+                """
+                    Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
+                """
+                if start_date.hour > 7.0 or end_date.hour < 20.0:
+                    if not start_date.hour > 7.0:
+                        record.normal_hours = end_date.hour - 7
+                    if not end_date.hour < 20.0:
+                        record.normal_hours = 20 - start_date.hour
+
+                    if record.normal_hours < 0: record.worked_hours1 = 0
+                else:
+                    record.normal_hours = 0
+
             else:
                 record.worked_hours = False
+
+
