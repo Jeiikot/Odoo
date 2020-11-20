@@ -94,7 +94,7 @@ class technicalServiceRequest(models.Model):
             # if start_date.hour > 7 and start_date < 20:
             #     record.worked_hours1 = 1
 
-            if record.end_date:
+            if record.end_date and record.start_date:
                 delta = record.end_date - record.start_date
                 record.worked_hours = delta.total_seconds() / 3600.0
             else:
