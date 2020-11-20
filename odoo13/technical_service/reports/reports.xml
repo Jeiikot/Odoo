@@ -1,0 +1,44 @@
+<odoo>
+
+    <report
+        id="report_technical_service"
+        model="technical_service.request"
+        string="Technical Service  Report"
+        name="technical_service.report_technical_service_view"
+        file="technical_service.report_technical_service"
+        report_type="qweb-pdf" />
+
+    <template id="report_technical_service_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <table class="table table-condensed" style="width:100%; text-align:center;">
+                            <tr>
+                                <th colspan="2"><h1>Report Technical Service</h1></th>
+                            </tr>
+                            <tr>
+                                <th colspan="2"><h2 t-field="doc.category_id"/></th>
+                            </tr>
+                            <tr>
+                                <th>Start Date</th>
+                                <th><span t-field="doc.start_date"/></th>
+                            </tr>
+                            <tr>
+                                <th>End Date</th>
+                                <th><span t-field="doc.end_date"/></th>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Description</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2"><span t-field="doc.description"/></th>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
