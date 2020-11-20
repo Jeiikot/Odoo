@@ -62,5 +62,5 @@ class technicalServiceRequest(models.Model):
     @api.constrains('stage_id', 'end_date')
     def _check_done(self):
         for record in self:
-            if not record.end_date and record.stage_id.name.upper() == "DONE":
+            if not record.end_date and record.stage_id.done == True:
                 raise exceptions.ValidationError(_("The stage cannot be completed if there is no end date."))
