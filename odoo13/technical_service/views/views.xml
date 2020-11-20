@@ -1,60 +1,49 @@
 <odoo>
   <data>
-    <!-- explicit list view definition -->
-<!--
-    <record model="ir.ui.view" id="technical_service.list">
-      <field name="name">technical_service list</field>
-      <field name="model">technical_service.technical_service</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
-        </tree>
-      </field>
-    </record>
--->
 
-    <!-- actions opening views on models -->
-<!--
-    <record model="ir.actions.act_window" id="technical_service.action_window">
-      <field name="name">technical_service window</field>
-      <field name="res_model">technical_service.technical_service</field>
-      <field name="view_mode">tree,form</field>
+    <!-- window action -->
+    <!--
+        The following tag is an action definition for a "window action",
+        that is an action opening a view or a set of views
+    -->
+    <record model="ir.actions.act_window" id="request_list_action">
+        <field name="name">Technical Service Request</field>
+        <field name="res_model">technical_service.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the First Request
+            </p>
+        </field>
     </record>
--->
 
-    <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="technical_service.action_server">
-      <field name="name">technical_service server</field>
-      <field name="model_id" ref="model_technical_service_technical_service"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
+    <!-- top level menu: no parent -->
+    <menuitem id="main_technical_service_menu" name="Technical Service"/>
+
+    <!-- A first level in the left side menu is needed
+            before using action= attribute -->
+    <menuitem id="technical_service_menu" name="Technical Service" sequence="1"
+                parent="main_technical_service_menu"/>
+
+    <menuitem id="technical_service_request" name="Request" parent="technical_service_menu" sequence="0"
+                action="request_list_action"/>
+
+    <record model="ir.actions.act_window" id="stage_list_action">
+        <field name="name">Technical Service Stage</field>
+        <field name="res_model">technical_service.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the First Stage
+            </p>
+        </field>
     </record>
--->
 
-    <!-- Top menu item -->
-<!--
-    <menuitem name="technical_service" id="technical_service.menu_root"/>
--->
-    <!-- menu categories -->
-<!--
-    <menuitem name="Menu 1" id="technical_service.menu_1" parent="technical_service.menu_root"/>
-    <menuitem name="Menu 2" id="technical_service.menu_2" parent="technical_service.menu_root"/>
--->
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="technical_service.menu_1_list" parent="technical_service.menu_1"
-              action="technical_service.action_window"/>
-    <menuitem name="Server to list" id="technical_service" parent="technical_service.menu_2"
-              action="technical_service.action_server"/>
--->
+    <menuitem id="technical_service_conf_menu" name="configuration" sequence="2"
+                parent="main_technical_service_menu"/>
+
+    <menuitem id="technical_service_stage" name="Technical Service Stage" parent="technical_service_conf_menu" sequence="0"
+                action="stage_list_action"/>
+
   </data>
 </odoo>
