@@ -96,16 +96,14 @@ class technicalServiceRequest(models.Model):
                 """
                     Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
                 """
-                if start_date.hour > 7.0 or end_date.hour < 20.0:
+                if (start_date.hour > 7.0 or end_date.hour < 20.0) and (start_date.weekday() != 6):
                     if not start_date.hour > 7.0:
                         record.normal_hours = end_date.hour - 7
                     if not end_date.hour < 20.0:
                         record.normal_hours = 20 - start_date.hour
-
-                    if record.normal_hours < 0: record.worked_hours1 = 0
+                    if record.normal_hours < 0: record.normal_hours = 0
                 else:
                     record.normal_hours = 0
-
             else:
                 record.worked_hours = False
 
