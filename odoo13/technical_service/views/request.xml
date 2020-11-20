@@ -38,6 +38,7 @@
                                 <group>
                                     <field name="start_date"/>
                                     <field name="worked_hours"/>
+                                    <field name="worked_hours1"/>
                                 </group>
                                 <group>
                                     <field name="end_date"/>

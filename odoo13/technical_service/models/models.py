@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, exceptions, _
+from odoo.tools import date_utils
+import pytz
+
+import datetime
 
 
 class technicalServiceStage(models.Model):
@@ -41,6 +45,8 @@ class technicalServiceRequest(models.Model):
     worked_hours = fields.Float(string='Worked Hours',
         compute='_compute_worked_hours', store=True, readonly=True)
 
+    worked_hours1 = fields.Float()
+
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
     schedule_date = fields.Datetime('Scheduled Date', required=True,
@@ -54,6 +60,11 @@ class technicalServiceRequest(models.Model):
     user_id = fields.Many2one('res.users', string='Technician', tracking=True, required=True)
     stage_id = fields.Many2one('technical_service.stage', string='Stage', ondelete='restrict',
                                tracking=True, default=_default_stage, copy=False)
+
+    @api.onchange('schedule_date')
+    def _onchange_start_date(self):
+        # set auto-changing field
+        self.start_date = self.schedule_date
 
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
@@ -69,7 +80,20 @@ class technicalServiceRequest(models.Model):
 
     @api.depends('start_date', 'end_date')
     def _compute_worked_hours(self):
+        # user_tz = self.env.user.tz or pytz.utc
+        # local = pytz.timezone(user_tz)
         for record in self:
+            # if record.start_date:
+            #     start_date = datetime.datetime.strptime(
+            #         fields.Datetime.to_string(record.start_date.astimezone(local)),
+            #         '%Y-%m-%d %H:%M:%S')
+            # if record.end_date:
+            #     end_date = datetime.datetime.strptime(
+            #         fields.Datetime.to_string(record.end_date.astimezone(local)),
+            #         '%Y-%m-%d %H:%M:%S')
+            # if start_date.hour > 7 and start_date < 20:
+            #     record.worked_hours1 = 1
+
             if record.end_date:
                 delta = record.end_date - record.start_date
                 record.worked_hours = delta.total_seconds() / 3600.0
