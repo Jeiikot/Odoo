@@ -88,12 +88,8 @@ class technicalServiceRequest(models.Model):
                 delta = record.end_date - record.start_date
                 record.worked_hours = delta.total_seconds() / 3600.0
 
-                start_date = datetime.datetime.strptime(
-                    fields.Datetime.to_string(record.start_date.astimezone(local)),
-                    '%Y-%m-%d %H:%M:%S')
-                end_date = datetime.datetime.strptime(
-                    fields.Datetime.to_string(record.end_date.astimezone(local)),
-                    '%Y-%m-%d %H:%M:%S')
+                start_date, end_date = self.convert_to_datetime(record.start_date, record.end_date, local)
+
 
                 """
                     Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
@@ -146,3 +142,12 @@ class technicalServiceRequest(models.Model):
                 if day != start_day and day != end_day:
                     dict_hours[day] = [hour for hour in range(0, 24)]
         return dict_hours
+
+    def convert_to_datetime(self, from_date, to_date, local):
+        start_date = datetime.datetime.strptime(
+            fields.Datetime.to_string(from_date.astimezone(local)),
+            '%Y-%m-%d %H:%M:%S')
+        end_date = datetime.datetime.strptime(
+            fields.Datetime.to_string(to_date.astimezone(local)),
+            '%Y-%m-%d %H:%M:%S')
+        return start_date, end_date
