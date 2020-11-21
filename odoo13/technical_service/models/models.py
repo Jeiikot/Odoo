@@ -46,7 +46,7 @@ class technicalServiceRequest(models.Model):
         compute='_compute_worked_hours', store=True, readonly=True)
 
     normal_hours = fields.Char('Normal Hours')
-    hours_nigth = fields.Float('Hours at Nigth')
+    hours_nigth = fields.Char('Hours at Nigth')
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
@@ -90,7 +90,7 @@ class technicalServiceRequest(models.Model):
                 # Convert Fields.Datetime to Datetime
                 start_date, end_date = self.convert_to_datetime(record.start_date, record.end_date, local)
                 # Get Worked Hours
-                # list_worked_hours = self.get_worked_hours(start_date, end_date)
+                dict_worked_hours = self.get_worked_hours(start_date, end_date)
 
 
                 """
@@ -104,7 +104,10 @@ class technicalServiceRequest(models.Model):
                 #     if record.normal_hours < 0: record.normal_hours = 0
                 # else:
                 #     record.normal_hours = 0
-                record.normal_hours = str(self.get_worked_hours(start_date, end_date))
+                # record.normal_hours = str(self.get_worked_hours(start_date, end_date)
+                record.hours_nigth = self.get_worked_hours(start_date, end_date)
+                record.normal_hours = self.check_normal_hours(dict_worked_hours)
+
 
 
                 """
@@ -135,8 +138,9 @@ class technicalServiceRequest(models.Model):
                                     dict = {days of the week: [hours worked]}
         """
         count = 1
-        list_hours = list(); dict_hours = dict()
+        dict_hours = dict()
         for day in range(0, 7):
+            list_hours = list()
             for hour in range(0, 24):
                 temp_datetime = datetime.timedelta(days=day, hours=hour)
                 if (temp_datetime >= datetime.timedelta(days=start_day, hours=start_hour)) \
@@ -149,9 +153,9 @@ class technicalServiceRequest(models.Model):
                 list_hours.insert(0, start_date)
             if day == end_day:
                 list_hours.append(end_date)
-            dict_hours = {
-                day: list_hours
-            }
+            if list_hours:
+                dict_hours[day] = list_hours
+
         return dict_hours
 
     def convert_to_datetime(self, from_date, to_date, local):
@@ -162,3 +166,29 @@ class technicalServiceRequest(models.Model):
             fields.Datetime.to_string(to_date.astimezone(local)),
             '%Y-%m-%d %H:%M:%S')
         return start_date, end_date
+
+    def check_normal_hours(self, dict_worked_hours):
+        count = 0
+        for day in dict_worked_hours.keys():
+            for index, element in enumerate(dict_worked_hours[day]):
+                if index == 0:
+                    continue
+                current_datetime = datetime.timedelta(
+                    days=day,
+                    hours=dict_worked_hours[day][index - 1].hour,
+                    minutes=dict_worked_hours[day][index - 1].minute
+                )
+                next_datetime = datetime.timedelta(
+                    days=day,
+                    hours=element.hour,
+                    minutes=element.minute
+                )
+                if (current_datetime >= datetime.timedelta(days=day, hours=7, minutes=0)) \
+                        and (current_datetime <= datetime.timedelta(days=day, hours=20, minutes=0))\
+                    and (next_datetime >= datetime.timedelta(days=day, hours=7, minutes=0))\
+                        and (next_datetime <= datetime.timedelta(days=day, hours=20, minutes=0))\
+                    and (day != 6):
+                    delta = next_datetime - current_datetime
+                    count += delta.total_seconds() / 3600
+
+        return count
