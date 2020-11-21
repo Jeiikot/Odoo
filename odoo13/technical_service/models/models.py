@@ -87,8 +87,10 @@ class technicalServiceRequest(models.Model):
             if record.end_date and record.start_date:
                 delta = record.end_date - record.start_date
                 record.worked_hours = delta.total_seconds() / 3600.0
-
+                # Convert Fields.Datetime to Datetime
                 start_date, end_date = self.convert_to_datetime(record.start_date, record.end_date, local)
+                # Get Worked Hours
+                # list_worked_hours = self.get_worked_hours(start_date, end_date)
 
 
                 """
@@ -103,11 +105,11 @@ class technicalServiceRequest(models.Model):
                 # else:
                 #     record.normal_hours = 0
                 record.normal_hours = str(self.get_worked_hours(start_date, end_date))
-                # record.normal_hours = str(date_utils.start_of(start_date, "hour") + datetime.timedelta(hours=5))
 
-                # """
-                #     Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
-                # """
+
+                """
+                    Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
+                """
                 # if (start_date.hour >= 20.0 or end_date.hour < 7.0) and (start_date.weekday() != 6):
                 #     if start_date.hour >= 20.0 and end_date < 7.0:
                 #         record.hours_nigth = (23 - end_date.hour) - 20.0
@@ -123,38 +125,34 @@ class technicalServiceRequest(models.Model):
 
 
     def get_worked_hours(self, start_date, end_date):
-        # start_day = int(start_date.weekday())
-        # start_hour = int(start_date.hour)
-        # end_day = int(end_date.weekday())
-        # end_hour = int(end_date.hour)
-        #
-        # dict_hours = dict()
-        # if start_day == end_day:
-        #     dict_hours = {
-        #         start_day: [hour for hour in range(start_hour, end_hour + 1)]
-        #     }
-        #     print(dict_hours)
-        # else:
-        #     for day in range(start_day, end_day + 1):
-        #         if day == start_day:
-        #             dict_hours[day] = [hour for hour in range(start_hour, 24)]
-        #         if day == end_day:
-        #             dict_hours[day] = [hour for hour in range(0, end_hour + 1)]
-        #         if day != start_day and day != end_day:
-        #             dict_hours[day] = [hour for hour in range(0, 24)]
-        # return dict_hours
+        start_day = int(start_date.weekday())
+        start_hour = int(start_date.hour)
+        end_day = int(end_date.weekday())
+        end_hour = int(end_date.hour)
+        """
+                                    The dictionary of hours worked is composed: 
+                            days of the week as keys and a list of hours worked as values.                    
+                                    dict = {days of the week: [hours worked]}
+        """
         count = 1
-        list_hours = list()
-        list_hours.append(start_date)
-        while True:
-            temp_hour = date_utils.start_of(start_date, "hour") + datetime.timedelta(hours=count)
-            if temp_hour < end_date:
-                list_hours.append(temp_hour)
-            else:
-                break
-            count += 1
-        list_hours.append(end_date)
-        return list_hours
+        list_hours = list(); dict_hours = dict()
+        for day in range(0, 7):
+            for hour in range(0, 24):
+                temp_datetime = datetime.timedelta(days=day, hours=hour)
+                if (temp_datetime >= datetime.timedelta(days=start_day, hours=start_hour)) \
+                        and (temp_datetime < datetime.timedelta(days=end_day, hours=end_hour)):
+                    list_hours.append(
+                        date_utils.start_of(start_date, "hour") + datetime.timedelta(hours=count)
+                    )
+                    count += 1
+            if day == start_day:
+                list_hours.insert(0, start_date)
+            if day == end_day:
+                list_hours.append(end_date)
+            dict_hours = {
+                day: list_hours
+            }
+        return dict_hours
 
     def convert_to_datetime(self, from_date, to_date, local):
         start_date = datetime.datetime.strptime(
