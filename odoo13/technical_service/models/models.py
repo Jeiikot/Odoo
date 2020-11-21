@@ -22,8 +22,8 @@ class technicalServiceCategory(models.Model):
     _name = 'technical_service.category'
     _description = 'Technical Service Category'
 
-    name = fields.Char('Name', required=True, translate=True)
-    code = fields.Char('Code', required=True)
+    name = fields.Float('Name', required=True, translate=True)
+    code = fields.Float('Code', required=True)
 
 
 class technicalServiceRequest(models.Model):
@@ -91,38 +91,18 @@ class technicalServiceRequest(models.Model):
                 start_date, end_date = self.convert_to_datetime(record.start_date, record.end_date, local)
                 # Get Worked Hours
                 dict_worked_hours = self.get_worked_hours(start_date, end_date)
-
-
                 """
                     Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
-                """
-                # if (start_date.hour >= 7.0 or end_date.hour < 20.0) and (start_date.weekday() != 6):
-                #     if not start_date.hour >= 7.0:
-                #         record.normal_hours = end_date.hour - 7
-                #     if not end_date.hour < 20.0:
-                #         record.normal_hours = 20 - start_date.hour
-                #     if record.normal_hours < 0: record.normal_hours = 0
-                # else:
-                #     record.normal_hours = 0
-                # record.normal_hours = str(self.get_worked_hours(start_date, end_date)
-                record.hours_nigth = self.get_worked_hours(start_date, end_date)
-                record.normal_hours = self.check_normal_hours(dict_worked_hours)
-
-
-
-                """
+                                                &
                     Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
-                """
-                # if (start_date.hour >= 20.0 or end_date.hour < 7.0) and (start_date.weekday() != 6):
-                #     if start_date.hour >= 20.0 and end_date < 7.0:
-                #         record.hours_nigth = (23 - end_date.hour) - 20.0
-                #     if (start_date.hour >= 0.0 and end_date.hour < 7.0) \
-                #             or (start_date.hour > 20.0 and end_date.hour < 24.0):
-                #         record.hours_nigth = end_date.hour - start_date.hour
-                #     if record.hours_nigth < 0: record.hours_nigth = 0
-                # else:
-                #     record.hours_nigth = 0
 
+                """
+                record.normal_hours, record.hours_nigth = self.check_worked_hours(
+                    dict_worked_hours,
+                    week_days=[0, 1, 2, 3, 4, 5],
+                    start_hour=7,
+                    end_hour=20
+                )
             else:
                 record.worked_hours = False
 
@@ -167,8 +147,9 @@ class technicalServiceRequest(models.Model):
             '%Y-%m-%d %H:%M:%S')
         return start_date, end_date
 
-    def check_normal_hours(self, dict_worked_hours):
-        count = 0
+    def check_worked_hours(self, dict_worked_hours, week_days, start_hour, end_hour):
+        count_normal_hours= 0
+        count_night_hours = 0
         for day in dict_worked_hours.keys():
             for index, element in enumerate(dict_worked_hours[day]):
                 if index == 0:
@@ -183,12 +164,17 @@ class technicalServiceRequest(models.Model):
                     hours=element.hour,
                     minutes=element.minute
                 )
-                if (current_datetime >= datetime.timedelta(days=day, hours=7, minutes=0)) \
-                        and (current_datetime <= datetime.timedelta(days=day, hours=20, minutes=0))\
-                    and (next_datetime >= datetime.timedelta(days=day, hours=7, minutes=0))\
-                        and (next_datetime <= datetime.timedelta(days=day, hours=20, minutes=0))\
-                    and (day != 6):
+                # Normal hours and Nigth Hours
+                # 7 AM <= x & x <= 8 PM include datetime current and next
+                # 8 PM <= x & x <= 7 AM include datetime current and next
+                if (datetime.timedelta(days=day, hours=start_hour, minutes=0) <= current_datetime) \
+                        and (current_datetime <= datetime.timedelta(days=day, hours=end_hour, minutes=0)) \
+                    and (datetime.timedelta(days=day, hours=start_hour, minutes=0) <= next_datetime) \
+                        and (next_datetime <= datetime.timedelta(days=day, hours=end_hour, minutes=0))\
+                    and (day in week_days):
                     delta = next_datetime - current_datetime
-                    count += delta.total_seconds() / 3600
-
-        return count
+                    count_normal_hours += delta.total_seconds() / 3600
+                else:
+                    delta = next_datetime - current_datetime
+                    count_night_hours += delta.total_seconds() / 3600
+        return count_normal_hours, count_night_hours
