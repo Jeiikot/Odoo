@@ -22,8 +22,8 @@ class technicalServiceCategory(models.Model):
     _name = 'technical_service.category'
     _description = 'Technical Service Category'
 
-    name = fields.Float('Name', required=True, translate=True)
-    code = fields.Float('Code', required=True)
+    name = fields.Char('Name', required=True, translate=True)
+    code = fields.Char('Code', required=True)
 
 
 class technicalServiceRequest(models.Model):
@@ -45,8 +45,8 @@ class technicalServiceRequest(models.Model):
     worked_hours = fields.Float(string='Worked Hours',
         compute='_compute_worked_hours', store=True, readonly=True)
 
-    normal_hours = fields.Char('Normal Hours')
-    hours_nigth = fields.Char('Hours at Nigth')
+    normal_hours = fields.Float('Normal Hours')
+    hours_nigth = fields.Float('Hours at Nigth')
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
