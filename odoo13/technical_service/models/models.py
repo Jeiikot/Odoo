@@ -46,7 +46,7 @@ class technicalServiceRequest(models.Model):
         compute='_compute_worked_hours', store=True, readonly=True)
 
     normal_hours = fields.Float('Normal Hours')
-    hours_nigth = fields.Float('Hours at Nigth')
+    hours_nigth = fields.Char('Hours at Nigth')
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
@@ -148,33 +148,37 @@ class technicalServiceRequest(models.Model):
         return start_date, end_date
 
     def check_worked_hours(self, dict_worked_hours, week_days, start_hour, end_hour):
-        count_normal_hours= 0
+        global old_datetime
+        count_normal_hours = 0
         count_night_hours = 0
-        for day in dict_worked_hours.keys():
+        for index_day, day in enumerate(dict_worked_hours.keys()):
             for index, element in enumerate(dict_worked_hours[day]):
-                if index == 0:
-                    continue
+                if (index == 0) and (index_day == 0): continue
                 current_datetime = datetime.timedelta(
-                    days=day,
-                    hours=dict_worked_hours[day][index - 1].hour,
-                    minutes=dict_worked_hours[day][index - 1].minute
-                )
-                next_datetime = datetime.timedelta(
-                    days=day,
+                    days=element.weekday(),
                     hours=element.hour,
                     minutes=element.minute
                 )
+                if index != 0:
+                    old_datetime = datetime.timedelta(
+                        days=dict_worked_hours[day][index - 1].weekday(),
+                        hours=dict_worked_hours[day][index - 1].hour,
+                        minutes=dict_worked_hours[day][index - 1].minute
+                    )
+                else:
+                    pass
                 # Normal hours and Nigth Hours
                 # 7 AM <= x & x <= 8 PM include datetime current and next
                 # 8 PM <= x & x <= 7 AM include datetime current and next
-                if (datetime.timedelta(days=day, hours=start_hour, minutes=0) <= current_datetime) \
-                        and (current_datetime <= datetime.timedelta(days=day, hours=end_hour, minutes=0)) \
-                    and (datetime.timedelta(days=day, hours=start_hour, minutes=0) <= next_datetime) \
-                        and (next_datetime <= datetime.timedelta(days=day, hours=end_hour, minutes=0))\
-                    and (day in week_days):
-                    delta = next_datetime - current_datetime
-                    count_normal_hours += delta.total_seconds() / 3600
-                else:
-                    delta = next_datetime - current_datetime
-                    count_night_hours += delta.total_seconds() / 3600
+                if day in week_days:
+                    if (datetime.timedelta(days=day, hours=start_hour, minutes=0) <= old_datetime) \
+                            and (old_datetime <= datetime.timedelta(days=day, hours=end_hour, minutes=0)) \
+                        and (datetime.timedelta(days=day, hours=start_hour, minutes=0) <= current_datetime) \
+                            and (current_datetime <= datetime.timedelta(days=day, hours=end_hour, minutes=0)):
+                        delta = current_datetime - old_datetime
+                        count_normal_hours += delta.total_seconds() / 3600
+                    else:
+                        delta = current_datetime - old_datetime
+                        count_night_hours += delta.total_seconds() / 3600
+                old_datetime = current_datetime
         return count_normal_hours, count_night_hours
