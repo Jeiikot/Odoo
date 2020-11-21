@@ -45,8 +45,9 @@ class technicalServiceRequest(models.Model):
     worked_hours = fields.Float(string='Worked Hours',
         compute='_compute_worked_hours', store=True, readonly=True)
 
-    normal_hours = fields.Float('Normal Hours')
-    hours_nigth = fields.Char('Hours at Nigth')
+    normal_hours = fields.Float('Normal Hours', readonly=True)
+    hours_nigth = fields.Float('Hours at Nigth', readonly=True)
+    sunday_hours = fields.Float('Sunday Hours', readonly=True)
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
@@ -95,9 +96,10 @@ class technicalServiceRequest(models.Model):
                     Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
                                                 &
                     Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
-
+                                                &
+                                    Hours worked on Sunday
                 """
-                record.normal_hours, record.hours_nigth = self.check_worked_hours(
+                record.normal_hours, record.hours_nigth, record.sunday_hours = self.check_worked_hours(
                     dict_worked_hours,
                     week_days=[0, 1, 2, 3, 4, 5],
                     start_hour=7,
@@ -151,6 +153,7 @@ class technicalServiceRequest(models.Model):
         global old_datetime
         count_normal_hours = 0
         count_night_hours = 0
+        count_sunday_hours = 0
         for index_day, day in enumerate(dict_worked_hours.keys()):
             for index, element in enumerate(dict_worked_hours[day]):
                 if (index == 0) and (index_day == 0): continue
@@ -180,5 +183,8 @@ class technicalServiceRequest(models.Model):
                     else:
                         delta = current_datetime - old_datetime
                         count_night_hours += delta.total_seconds() / 3600
+                else:
+                    delta = current_datetime - old_datetime
+                    count_sunday_hours += delta.total_seconds() / 3600
                 old_datetime = current_datetime
-        return count_normal_hours, count_night_hours
+        return count_normal_hours, count_night_hours, count_sunday_hours

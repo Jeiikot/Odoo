@@ -38,11 +38,21 @@
                                 <group>
                                     <field name="start_date"/>
                                     <field name="worked_hours"/>
-                                    <field name="normal_hours"/>
-                                    <field name="hours_nigth"/>
                                 </group>
                                 <group>
                                     <field name="end_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Hours details">
+                            <group>
+                                <group>
+                                    <field name="worked_hours"/>
+                                </group>
+                                <group>
+                                    <field name="normal_hours"/>
+                                    <field name="hours_nigth"/>
+                                    <field name="sunday_hours"/>
                                 </group>
                             </group>
                         </page>
