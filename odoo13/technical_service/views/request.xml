@@ -77,4 +77,16 @@
         </field>
     </record>
 
+    <!-- Request Calendar view -->
+    <record model="ir.ui.view" id="request_calendar_view">
+        <field name="name">request.calendar</field>
+        <field name="model">technical_service.request</field>
+        <field name="arch" type="xml">
+            <calendar string="Request Calendar" date_start="start_date"
+                date_stop="end_date" color="user_id">
+                <field name="name"/>
+            </calendar>
+        </field>
+    </record>
+
 </odoo>
