@@ -6,6 +6,13 @@ from odoo.tools import date_utils
 
 import datetime
 
+class technicalServiceStage(models.Model):
+    _name = 'technical_service.team'
+    _description = 'Technical Service Team'
+
+    name = fields.Char('Name', required=True, translate=True)
+    user_id = fields.Many2many('res.users', string='Technicians', required=True)
+
 
 class technicalServiceStage(models.Model):
     """ Model for case stages. This models the main stages of a Technical Service Request management flow. """
@@ -49,8 +56,9 @@ class technicalServiceRequest(models.Model):
     to_week_number = fields.Integer(readonly=True)
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
-                               help="Date requested for the technical service to happen")
+                               help="Date requested for the technical service to happen", readonly=True)
     schedule_date = fields.Datetime('Scheduled Date', required=True,
+        default=datetime.datetime.now() + datetime.timedelta(days=3),
         help="Date the Technical Service team plans the service.  It should not differ much from the Request Date. ")
     start_date = fields.Datetime('Start Date')
     end_date = fields.Datetime('End Date')
@@ -58,6 +66,7 @@ class technicalServiceRequest(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
     category_id = fields.Many2one('technical_service.category', string='Service Category', required=True)
+    technician_id = fields.Many2one('technical_service.team', string='Technician Team', required=True)
     user_id = fields.Many2one('res.users', string='Technician', tracking=True, required=True)
     stage_id = fields.Many2one('technical_service.stage', string='Stage', ondelete='restrict',
                                tracking=True, default=_default_stage, copy=False)

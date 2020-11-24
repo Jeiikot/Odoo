@@ -21,10 +21,8 @@
                         <group>
                             <field name="company_id" invisible="True"/>
                             <field name="category_id"/>
-                            <field name="request_date"/>
                         </group>
                         <group>
-                            <field name="user_id"/>
                             <field name="schedule_date"/>
                             <field name="priority" widget="priority"/>
                         </group>
@@ -41,6 +39,17 @@
                                 </group>
                                 <group>
                                     <field name="end_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Other Information">
+                            <group>
+                                <group>
+                                    <field name="technician_id"/>
+                                    <field name="user_id"/>
+                                </group>
+                                <group>
+                                    <field name="request_date"/>
                                 </group>
                             </group>
                         </page>
@@ -76,5 +85,26 @@
             </calendar>
         </field>
     </record>
-
-</odoo>
+    <!-- Request Form views -->
+    <record model="ir.ui.view" id="team_form_view">
+        <field name="name">team.form</field>
+        <field name="model">technical_service.team</field>
+        <field name="arch" type="xml">
+            <form string="Team Form">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Title"/>
+                        <h1>
+                            <field name="name" placeholder="Technical Service Team"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Technicals">
+                            <field name="user_id"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    </odoo>

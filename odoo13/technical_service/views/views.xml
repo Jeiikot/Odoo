@@ -1,66 +1,80 @@
 <odoo>
-  <data>
+    <data>
 
-    <!-- window action -->
-    <!--
-        The following tag is an action definition for a "window action",
-        that is an action opening a view or a set of views
-    -->
-    <record model="ir.actions.act_window" id="request_list_action">
-        <field name="name">Technical Service Request</field>
-        <field name="res_model">technical_service.request</field>
-        <field name="view_mode">tree,form,calendar</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create the First Technical Service Request
-            </p>
-        </field>
-    </record>
+        <!-- window action -->
+        <!--
+            The following tag is an action definition for a "window action",
+            that is an action opening a view or a set of views
+        -->
+        <record model="ir.actions.act_window" id="request_list_action">
+            <field name="name">Technical Service Request</field>
+            <field name="res_model">technical_service.request</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create the First Technical Service Request
+                </p>
+            </field>
+        </record>
 
-    <!-- top level menu: no parent -->
-    <menuitem id="main_technical_service_menu" name="Technical Service"/>
+        <record model="ir.actions.act_window" id="stage_list_action">
+            <field name="name">Technical Service Stage</field>
+            <field name="res_model">technical_service.stage</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create the First Technical Service Stage
+                </p>
+            </field>
+        </record>
 
-    <!-- A first level in the left side menu is needed
-            before using action= attribute -->
-    <menuitem id="technical_service_menu" name="Technical Service" sequence="1"
-                parent="main_technical_service_menu"/>
+        <record model="ir.actions.act_window" id="team_list_action">
+            <field name="name">Technical Team</field>
+            <field name="res_model">technical_service.team</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create the First Technical Team
+                </p>
+            </field>
+        </record>
 
-    <menuitem id="technical_service_request" name="Request" parent="technical_service_menu" sequence="0"
-                action="request_list_action"/>
+        <record model="ir.actions.act_window" id="category_list_action">
+            <field name="name">Service Category</field>
+            <field name="res_model">technical_service.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create the First Service Categry
+                </p>
+            </field>
+        </record>
 
-    <record model="ir.actions.act_window" id="stage_list_action">
-        <field name="name">Technical Service Stage</field>
-        <field name="res_model">technical_service.stage</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create the First Technical Service Stage
-            </p>
-        </field>
-    </record>
+        <!-- top level menu: no parent -->
+        <menuitem id="main_technical_service_menu" name="Technical Service"/>
 
-      <menuitem id="technical_service_report_menu" name="Report" sequence="2"
-                parent="main_technical_service_menu"/>
+        <!-- A first level in the left side menu is needed
+                before using action= attribute -->
+        <menuitem id="technical_service_menu" name="Technical Service"
+                  sequence="0" parent="main_technical_service_menu"/>
 
-    <menuitem id="technical_service_conf_menu" name="Configuration" sequence="3"
-                parent="main_technical_service_menu"/>
+        <menuitem id="technical_service_request" name="Request" parent="technical_service_menu"
+                  sequence="0" action="request_list_action"/>
 
-    <menuitem id="technical_service_stage" name="Service Stage" parent="technical_service_conf_menu" sequence="0"
-                action="stage_list_action"/>
+        <menuitem id="technical_service_report_menu" name="Report"
+                  sequence="1" parent="main_technical_service_menu"/>
 
-    <record model="ir.actions.act_window" id="category_list_action">
-        <field name="name">Service Category</field>
-        <field name="res_model">technical_service.category</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create the First Service Categry
-            </p>
-        </field>
-    </record>
+        <menuitem id="technical_service_conf_menu" name="Configuration"
+                  sequence="2" parent="main_technical_service_menu"/>
 
-    <menuitem id="technical_service_category" name="Service Category" parent="technical_service_conf_menu" sequence="1"
-                action="category_list_action"/>
+        <menuitem id="technical_service_team" name="Technical Team" parent="technical_service_conf_menu"
+                  sequence="0" action="team_list_action"/>
 
-  </data>
+        <menuitem id="technical_service_stage" name="Service Stage" parent="technical_service_conf_menu"
+                  sequence="1" action="stage_list_action"/>
+
+        <menuitem id="technical_service_category" name="Service Category" parent="technical_service_conf_menu"
+                  sequence="2" action="category_list_action"/>
+
+    </data>
 </odoo>
