@@ -45,6 +45,18 @@
                             </t>
                         </tbody>
                     </table>
+                    <table class="table table-condensed table-bordered">
+                        <tr>
+                            <th>Overtime normal hours</th>
+                            <th>Overtime at nitgh</th>
+                            <th>Overtime on sunday</th>
+                        </tr>
+                        <tr>
+                            <th><t t-esc="overtime_normal_hours"/></th>
+                            <th><t t-esc="overtime_nigth"/></th>
+                            <th><t t-esc="overtime_sunday"/></th>
+                        </tr>
+                    </table>
                 </div>
             </t>
         </template>

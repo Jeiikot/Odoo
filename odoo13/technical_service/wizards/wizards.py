@@ -31,8 +31,9 @@ class ReportTechnicalServiceHoursReportView(models.AbstractModel):
     _name = 'report.technical_service.hours_worked_report_view'
 
     def _get_report_values(self, docids, data=None):
-        employee_id = data['form']['employee_id']
-        week_number = data['form']['week_number']
+        sum_normal_hours, sum_hours_nigth, sum_sunday_hours = float(), float(), float()
+        overtime_normal_hours, overtime_nigth, overtime_sunday = float(), float(), float()
+        employee_id, week_number = data['form']['employee_id'], data['form']['week_number']
         requests = self.env['technical_service.request'].search([
             ('user_id.id', '=', employee_id),
             ('from_week_number', '>=', week_number),
@@ -63,7 +64,9 @@ class ReportTechnicalServiceHoursReportView(models.AbstractModel):
                 start_hour=7,
                 end_hour=20
             )
-
+            sum_normal_hours += normal_hours
+            sum_hours_nigth += hours_nigth
+            sum_sunday_hours += sunday_hours
             docs.append({
                 'start_date': request.start_date,
                 'end_date': request.end_date,
@@ -72,11 +75,17 @@ class ReportTechnicalServiceHoursReportView(models.AbstractModel):
                 'hours_nigth': hours_nigth,
                 'sunday_hours': sunday_hours
             })
+        if sum_normal_hours > 48: overtime_normal_hours = sum_normal_hours - 48
+        if sum_hours_nigth > 48: overtime_nigth = sum_hours_nigth - 48
+        if sum_sunday_hours > 48: overtime_sunday = sum_sunday_hours - 48
         return {
             'doc_ids': data['ids'],
             'doc_model': data['model'],
             'name': data['form']['name'],
             'week_number': week_number,
+            'overtime_normal_hours': overtime_normal_hours or 0,
+            'overtime_nigth': overtime_nigth or 0,
+            'overtime_sunday': overtime_sunday or 0,
             'docs': docs,
         }
 
