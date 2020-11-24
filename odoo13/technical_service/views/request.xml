@@ -44,18 +44,6 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Hours details">
-                            <group>
-                                <group>
-                                    <field name="worked_hours"/>
-                                </group>
-                                <group>
-                                    <field name="normal_hours"/>
-                                    <field name="hours_nigth"/>
-                                    <field name="sunday_hours"/>
-                                </group>
-                            </group>
-                        </page>
                     </notebook>
                 </sheet>
             </form>

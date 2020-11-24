@@ -39,7 +39,10 @@
         </field>
     </record>
 
-    <menuitem id="technical_service_conf_menu" name="Configuration" sequence="2"
+      <menuitem id="technical_service_report_menu" name="Report" sequence="2"
+                parent="main_technical_service_menu"/>
+
+    <menuitem id="technical_service_conf_menu" name="Configuration" sequence="3"
                 parent="main_technical_service_menu"/>
 
     <menuitem id="technical_service_stage" name="Service Stage" parent="technical_service_conf_menu" sequence="0"

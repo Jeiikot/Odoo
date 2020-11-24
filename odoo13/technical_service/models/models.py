@@ -2,7 +2,7 @@
 
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import date_utils
-import pytz
+
 
 import datetime
 
@@ -45,9 +45,8 @@ class technicalServiceRequest(models.Model):
     worked_hours = fields.Float(string='Worked Hours',
         compute='_compute_worked_hours', store=True, readonly=True)
 
-    normal_hours = fields.Char('Normal Hours', readonly=True)
-    hours_nigth = fields.Float('Hours at Nigth', readonly=True)
-    sunday_hours = fields.Float('Sunday Hours', readonly=True)
+    from_week_number = fields.Integer(readonly=True)
+    to_week_number = fields.Integer(readonly=True)
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen")
@@ -82,108 +81,13 @@ class technicalServiceRequest(models.Model):
 
     @api.depends('start_date', 'end_date')
     def _compute_worked_hours(self):
-        user_tz = self.env.user.tz or pytz.utc
-        local = pytz.timezone(user_tz)
         for record in self:
             if record.end_date and record.start_date:
                 delta = record.end_date - record.start_date
                 record.worked_hours = delta.total_seconds() / 3600.0
-                # Convert Fields.Datetime to Datetime
-                start_date, end_date = self.convert_to_datetime(record.start_date, record.end_date, local)
-                # Get Worked Hours
-                list_worked_hours = self.get_worked_hours(start_date, end_date)
-                """
-                    Hours worked Monday through Saturday from 7:00 a.m. at 8:00 p.m.
-                                                &
-                    Hours worked Monday through Saturday from 8:00 p.m. to 7:00 a.m.
-                                                &
-                                    Hours worked on Sunday
-                """
-                record.normal_hours, record.hours_nigth, record.sunday_hours = self.check_worked_hours(
-                    list_worked_hours,
-                    week_days=[0, 1, 2, 3, 4, 5],
-                    start_hour=7,
-                    end_hour=20
-                )
+                # Set from week number and to week number
+                self.from_week_number = self.start_date.isocalendar()[1]
+                self.to_week_number = self.end_date.isocalendar()[1]
             else:
                 record.worked_hours = False
 
-
-    def get_worked_hours(self, start_date, end_date):
-        # start_day = int(start_date.weekday())
-        # start_hour = int(start_date.hour)
-        # end_day = int(end_date.weekday())
-        # end_hour = int(end_date.hour)
-        """
-                                    The dictionary of hours worked is composed: 
-                            days of the week as keys and a list of hours worked as values.                    
-                                    dict = {days of the week: [hours worked]}
-        """
-
-        # dict_hours = dict()
-        # for day in range(0, 7):
-        #     list_hours = list()
-        #     for hour in range(0, 24):
-        #         temp_datetime = datetime.timedelta(days=day, hours=hour)
-        #         if (temp_datetime >= datetime.timedelta(days=start_day, hours=start_hour)) \
-        #                 and (temp_datetime < datetime.timedelta(days=end_day, hours=end_hour)):
-        #             list_hours.append(
-        #                 date_utils.start_of(start_date, "hour") + datetime.timedelta(hours=count)
-        #             )
-        #             count += 1
-        #     if day == start_day:
-        #         list_hours.insert(0, start_date)
-        #     if day == end_day:
-        #         list_hours.append(end_date)
-        #     if list_hours:
-        #         dict_hours[day] = list_hours
-        count = 1
-        list_hours = [start_date]
-        if end_date:
-            while True:
-                temp_date = date_utils.start_of(start_date, "hour") + datetime.timedelta(hours=count)
-                if temp_date < end_date:
-                    list_hours.append(temp_date)
-                    count += 1
-                else: break
-        list_hours.append(end_date)
-        return list_hours
-
-    def convert_to_datetime(self, from_date, to_date, local):
-        start_date = datetime.datetime.strptime(
-            fields.Datetime.to_string(from_date.astimezone(local)),
-            '%Y-%m-%d %H:%M:%S')
-        end_date = datetime.datetime.strptime(
-            fields.Datetime.to_string(to_date.astimezone(local)),
-            '%Y-%m-%d %H:%M:%S')
-        return start_date, end_date
-
-    def check_worked_hours(self, list_worked_hours, week_days, start_hour, end_hour):
-        count_normal_hours = 0
-        count_night_hours = 0
-        count_sunday_hours = 0
-        #         # Normal hours, Nigth Hours and Sunday
-        #         # 7 AM <= x & x <= 8 PM include datetime current and next
-        #         # 8 PM <= x & x <= 7 AM include datetime current and next
-        for index, element in enumerate(list_worked_hours):
-            if index == 0: continue
-            old_datetime = list_worked_hours[index - 1]
-            current_datetime = element
-            from_hour = datetime.timedelta(hours=start_hour, minutes=0)
-            to_hour = datetime.timedelta(hours=end_hour, minutes=0)
-            if (old_datetime.weekday() in week_days) \
-                    and (current_datetime.weekday() in week_days):
-                if (from_hour <= datetime.timedelta(hours=old_datetime.hour, minutes=old_datetime.minute)) \
-                        and (datetime.timedelta(hours=old_datetime.hour, minutes=old_datetime.minute) <= to_hour) \
-                    and (from_hour <= datetime.timedelta(hours=current_datetime.hour, minutes=current_datetime.minute))\
-                        and (datetime.timedelta(hours=current_datetime.hour, minutes=current_datetime.minute) <= to_hour):
-                    delta = current_datetime - old_datetime
-                    count_normal_hours += delta.total_seconds() / 3600
-                else:
-                    delta = current_datetime - old_datetime
-                    count_night_hours += delta.total_seconds() / 3600
-
-            else:
-                delta = current_datetime - old_datetime
-                count_sunday_hours += delta.total_seconds() / 3600
-        return count_normal_hours, count_night_hours, count_sunday_hours

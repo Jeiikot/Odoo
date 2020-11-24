@@ -32,6 +32,7 @@
         'views/views.xml',
         'views/templates.xml',
         'reports/reports.xml',
+        'wizards/wizards.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

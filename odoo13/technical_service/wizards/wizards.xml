@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report id="hours_worked_report"
+            model="technical_service.hours_worked.report.wizard"
+            string="Hours Worked Report"
+            report_type="qweb-pdf"
+            name="technical_service.hours_worked_report_view"
+            menu="False"/>
+
+        <template id="hours_worked_report_view">
+            <t t-call="web.html_container">
+                <div class="header" style="border-bottom: 1px solid black;">
+                    <h3 class="text-center">Hours Worked Report
+                        <p style="font-size: 14px;">
+                            <strong>Employee</strong>: <t t-esc="name"/>
+                        </p>
+                        <p style="font-size: 14px;">
+                            <strong>Week number</strong>: <t t-esc="week_number"/>
+                        </p>
+                    </h3>
+                </div>
+                <div class="article mt0 o_report_layout_standard">
+                    <table class="table table-condensed table-bordered">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Worked Hours</th>
+                                <th>Normal Hours</th>
+                                <th>Hours at Nigth</th>
+                                <th>Sunday Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                            <tr class="text-center">
+                                <td><span t-esc="doc['start_date']"/></td>
+                                <td><span t-esc="doc['end_date']"/></td>
+                                <td><span t-esc="doc['worked_hours']"/></td>
+                                <td><span t-esc="doc['normal_hours']"/></td>
+                                <td><span t-esc="doc['hours_nigth']"/></td>
+                                <td><span t-esc="doc['sunday_hours']"/></td>
+                            </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <record id="hours_worked_report_wizard" model="ir.ui.view" >
+            <field name="name">Hours Worked Report</field>
+            <field name="model">technical_service.hours_worked.report.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Hours Worked Report">
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="week_number"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="get_report" string="Get Report" type="object" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_hours_worked_report_wizard"
+            name="Hours Worked Report"
+            res_model="technical_service.hours_worked.report.wizard"
+            view_mode="form"
+            target="new"/>
+
+        <menuitem action="action_hours_worked_report_wizard"
+            id="menu_hours_worked_report_wizard"
+            parent="technical_service_report_menu"/>
+    </data>
+</odoo>
