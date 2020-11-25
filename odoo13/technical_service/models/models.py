@@ -54,6 +54,7 @@ class technicalServiceRequest(models.Model):
 
     from_week_number = fields.Integer(readonly=True)
     to_week_number = fields.Integer(readonly=True)
+    color = fields.Integer()
 
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the technical service to happen", readonly=True)
@@ -75,6 +76,11 @@ class technicalServiceRequest(models.Model):
     def _onchange_start_date(self):
         # set auto-changing field
         self.start_date = self.schedule_date
+
+    @api.onchange('start_date')
+    def _onchange_end_date(self):
+        # set auto-changing field
+        self.end_date = self.start_date + datetime.timedelta(hours=4)
 
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):

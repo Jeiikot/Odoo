@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Request Form views -->
+    <!-- Request Form view -->
     <record model="ir.ui.view" id="request_form_view">
         <field name="name">request.form</field>
         <field name="model">technical_service.request</field>
@@ -59,7 +59,7 @@
         </field>
     </record>
 
-    <!-- override the automatically generated list view for courses -->
+    <!-- Request Tree View -->
     <record model="ir.ui.view" id="request_tree_view">
         <field name="name">request.tree</field>
         <field name="model">technical_service.request</field>
@@ -74,6 +74,22 @@
         </field>
     </record>
 
+    <!-- Request Search views -->
+    <record model="ir.ui.view" id="request_search_view">
+        <field name="name">request.search</field>
+        <field name="model">technical_service.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="user_id"/>
+                <filter name="request" string="Request"
+                    domain="[('stage_id.done', '=', False)]"/>
+                <filter name="done" string="Done"
+                    domain="[('stage_id.done', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
     <!-- Request Calendar view -->
     <record model="ir.ui.view" id="request_calendar_view">
         <field name="name">request.calendar</field>
@@ -85,7 +101,53 @@
             </calendar>
         </field>
     </record>
-    <!-- Request Form views -->
+
+     <!-- Request Kanban view -->
+    <record model="ir.ui.view" id="view_technical_service_request_kanban">
+        <field name="name">technical_service.request.kanban</field>
+        <field name="model">technical_service.request</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div
+                            t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+                                            oe_kanban_global_click_edit oe_semantic_html_override
+                                            oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                            <div class="oe_dropdown_kanban">
+                                <!-- dropdown menu -->
+                                <div class="oe_dropdown_toggle">
+                                    <i class="fa fa-bars fa-lg" title="Manage" aria-label="Manage"/>
+                                    <ul class="oe_dropdown_menu">
+                                        <li>
+                                            <a type="delete">Delete</a>
+                                        </li>
+                                        <li>
+                                            <ul class="oe_kanban_colorpicker"
+                                                data-field="color"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                            <div t-attf-class="oe_kanban_content">
+                                <!-- title -->
+                                Name:
+                                <field name="name"/><br/>
+                                Service Category:
+                                <field name="category_id"/><br/>
+                                Technician:
+                                <field name="user_id"/><br/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Team Form views -->
     <record model="ir.ui.view" id="team_form_view">
         <field name="name">team.form</field>
         <field name="model">technical_service.team</field>
