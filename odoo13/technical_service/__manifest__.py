@@ -31,6 +31,7 @@
         'views/request.xml',
         'views/views.xml',
         'views/templates.xml',
+        'views/res_partner.xml',
         'reports/reports.xml',
         'wizards/wizards.xml',
     ],

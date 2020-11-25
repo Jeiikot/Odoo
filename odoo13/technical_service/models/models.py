@@ -64,6 +64,7 @@ class technicalServiceRequest(models.Model):
     start_date = fields.Datetime('Start Date')
     end_date = fields.Datetime('End Date')
 
+    customer_id = fields.Many2one('res.partner', string='Customer', required=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
     category_id = fields.Many2one('technical_service.category', string='Service Category', required=True)
