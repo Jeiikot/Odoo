@@ -1,3 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_technical_service_request,Technical Service Manager,model_technical_service_request,base.group_user,1,1,1,1
-access_technical_service_request,Technical Service Read,model_technical_service_request,base.group_user,1,0,0,0
+technical_service_request_manager,Technical Service Request Manager,model_technical_service_request,technical_service.group_manager,1,1,1,1
+technical_service_stage_manager,Technical Service Stage Manager,model_technical_service_stage,technical_service.group_manager,1,1,1,1
+technical_service_team_manager,Technical Service Team Manager,model_technical_service_team,technical_service.group_manager,1,1,1,1
+technical_service_category_manager,Technical Service Category Manager,model_technical_service_category,technical_service.group_manager,1,1,1,1
+technical_service_request_read,Technical Service Request Read,model_technical_service_request,technical_service.group_read,1,0,0,0
+technical_service_stage_read,Technical Service Stage Read,model_technical_service_stage,technical_service.group_read,1,0,0,0
+technical_service_team_read,Technical Service Team Read,model_technical_service_team,technical_service.group_read,1,0,0,0
+technical_service_category_read,Technical Service Category Read,model_technical_service_category,technical_service.group_read,1,0,0,0
